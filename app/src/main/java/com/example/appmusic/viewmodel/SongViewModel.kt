@@ -4,6 +4,7 @@ import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.appmusic.model.*
+import com.thin.music.model.ItemMusicList
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
@@ -13,7 +14,7 @@ class SongViewModel : ViewModel {
     private val songSevice: SongSevice
     val isRuning: ObservableBoolean
     val isLoading: MutableLiveData<Boolean> = MutableLiveData()
-    val chart: MutableLiveData<MutableList<ItemChart>>
+    val chart: MutableLiveData<MutableList<ItemMusicList<ItemSong>>>
 
     constructor() {
         isLoading.value = true
@@ -26,7 +27,8 @@ class SongViewModel : ViewModel {
         songSevice = RetrofitUtil.creareRetrofit(
 //            "https://songserver.herokuapp.com",
 //            "https://serviceapp0902.herokuapp.com",
-            "https://musiconline98.herokuapp.com",
+//            "https://musiconline98.herokuapp.com",
+            "http://10.255.145.198:5000",
             SongSevice::class.java
         )
     }

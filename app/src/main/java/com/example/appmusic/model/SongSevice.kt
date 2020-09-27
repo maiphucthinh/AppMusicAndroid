@@ -1,5 +1,6 @@
 package com.example.appmusic.model
 
+import com.thin.music.model.ItemMusicList
 import io.reactivex.Observable
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -22,5 +23,5 @@ interface SongSevice {
     ): Observable<LinkSong>
 
     @GET("/api/getChart")
-    fun getChart(): Observable<MutableList<ItemChart>>
+    fun getChart(): Observable<MutableList<ItemMusicList<ItemSong>>>
 }

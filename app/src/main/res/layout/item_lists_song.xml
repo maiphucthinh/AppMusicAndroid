@@ -2,44 +2,34 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <data>
 
-        <variable
-            name="data"
-            type="com.example.appmusic.model.ItemTopic" />
-    </data>
-
-    <androidx.cardview.widget.CardView
-        android:layout_marginTop="18dp"
+    <LinearLayout
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="8dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/topic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="18dp"
+            android:text="Chart   >"
+            android:textSize="22sp"
+            android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:layout_marginTop="4dp"
+            android:background="@color/colorPink" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rc_chart"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_marginTop="8dp" />
+    </LinearLayout>
 
-            <TextView
-                android:textStyle="bold"
-                android:id="@+id/topic"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="18dp"
-                android:text="Chart   >"
-                android:textSize="22sp"
-                app:setText="@{data.topic}"></TextView>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="4dp"
-                android:layout_marginTop="4dp"
-                android:background="@color/colorPink"/>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rc_chart"
-                android:layout_width="match_parent"
-                android:layout_height="324dp"
-                android:layout_marginTop="8dp" />
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
 </layout>

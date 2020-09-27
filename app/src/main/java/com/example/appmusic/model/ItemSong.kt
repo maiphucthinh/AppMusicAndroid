@@ -8,6 +8,7 @@ class ItemSong {
     @PrimaryKey
     var id: String = ""
     var linkImage = ""
+    var number = ""
     var songName = ""
     var artistName = ""
     var linkSong = ""

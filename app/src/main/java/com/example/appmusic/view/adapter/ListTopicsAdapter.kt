@@ -32,6 +32,7 @@ class ListTopicsAdapter : RecyclerView.Adapter<ListTopicsAdapter.TopicHolder> {
 
     override fun onBindViewHolder(holder: TopicHolder, position: Int) {
         val data = iTopic.getData(position)
+//test
         holder.binding.data = data
 
         val iChart = object :ChartAdapter.IChart{

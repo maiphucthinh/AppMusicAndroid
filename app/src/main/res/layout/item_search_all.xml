@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/name_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Top Kết Quả"
+            android:textColor="@color/colorWhite"
+            android:textSize="22sp"></TextView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rc_item"
+            android:layout_width="match_parent"
+            android:layout_height="222dp"
+            android:layout_marginTop="8dp" />
+
+        <Button
+            android:id="@+id/btn_more"
+            android:layout_width="146dp"
+            android:layout_height="28dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/btn_login"
+            android:text="Xem thêm"
+            android:textColor="@color/colorWhite"></Button>
+
+    </LinearLayout>
+</layout>

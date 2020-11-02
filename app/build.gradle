@@ -15,7 +15,7 @@ android {
     defaultConfig {
         applicationId "com.example.appmusic"
         minSdkVersion 19
-        targetSdkVersion 29
+        targetSdkVersion 22
         versionCode 1
         versionName "1.0"
 
@@ -25,13 +25,6 @@ android {
     dataBinding {
         enabled = true
     }
-//    buildFeatures {
-//
-//        dataBinding true
-//
-//        // for view binding:
-//        // viewBinding true
-//    }
 
     buildTypes {
         release {
@@ -72,7 +65,9 @@ dependencies {
     implementation "android.arch.persistence.room:runtime:1.1.1"
     kapt "android.arch.persistence.room:compiler:1.1.1"
     implementation 'de.hdodenhof:circleimageview:3.1.0'
-
-
     implementation 'org.jsoup:jsoup:1.10.2'
+
+    implementation 'com.sothree.slidinguppanel:library:3.4.0'
+    implementation 'jp.wasabeef:blurry:2.1.1'
+    implementation 'com.github.navasmdc:MaterialDesign:+'
 }

@@ -6,32 +6,20 @@
 
         <variable
             name="data"
-            type="com.example.appmusic.model.ItemChart" />
+            type="com.example.appmusic.model.ItemSong" />
     </data>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:background="@drawable/item_search_online">
 
-        <TextView
-            android:id="@+id/number"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="4dp"
-            android:layout_marginTop="6dp"
-            android:gravity="center"
-            android:text="01"
-            android:textColor="@color/colorRed"
-            android:textSize="20sp"
-            app:setColor="@{data.number}"
-            app:setText="@{data.number}"></TextView>
 
         <ImageView
             android:id="@+id/img"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:layout_marginLeft="4dp"
-            android:layout_toRightOf="@id/number"
             android:scaleType="centerCrop"
             android:src="@drawable/mylove1"
             app:setImage="@{data.linkImage}"></ImageView>
@@ -48,16 +36,20 @@
                 android:id="@+id/name_song"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:lines="1"
                 android:text="name song"
-                android:textSize="20sp"
+                android:textColor="@color/colorBlack"
+                android:textSize="16sp"
                 app:setText="@{data.songName}"></TextView>
 
             <TextView
                 android:id="@+id/artist_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:lines="1"
                 android:text="Artist Name"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 app:setText="@{data.artistName}"></TextView>
         </LinearLayout>
 

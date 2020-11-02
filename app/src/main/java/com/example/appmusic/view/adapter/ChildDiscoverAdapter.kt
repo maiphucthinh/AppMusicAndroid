@@ -31,33 +31,10 @@ class ChildDiscoverAdapter : RecyclerView.Adapter<ChildDiscoverAdapter.ChildHold
 
     override fun onBindViewHolder(holder: ChildHolder, position: Int) {
         val data = iTopic.getData(position)
-//test
         holder.binding.data = data
-
-//        val iChart = object :DiscoverAdapter.IDiscover{
-//            override fun getSizeChart(): Int {
-//                data.
-//            }
-//
-//            override fun getItemChart(position: Int): ItemChart {
-//
-//            }
-//
-//            override fun setOnClickItem(position: Int) {
-//
-//            }
-//        }
-//
-//        val adapter:DiscoverAdapter
-//        if (holder.binding.rcChart.tag == null ){
-//            adapter = DiscoverAdapter(iChart)
-//            holder.binding.rcChart.adapter = adapter
-//        }else {
-//            adapter = holder.binding.rcChart.tag as DiscoverAdapter
-//            adapter.iDiscover = iChart
-//            adapter.notifyDataSetChanged()
-//        }
-
+        holder.binding.root.setOnClickListener {
+            iTopic.setOnClicItem(position)
+        }
     }
 
     class ChildHolder(val binding: ItemSquareSongBinding) : RecyclerView.ViewHolder(binding.root)
@@ -65,6 +42,7 @@ class ChildDiscoverAdapter : RecyclerView.Adapter<ChildDiscoverAdapter.ChildHold
     interface ITopic {
         fun getSize(): Int
         fun getData(position: Int): ItemSong
+        fun setOnClicItem(position: Int)
     }
 
 }

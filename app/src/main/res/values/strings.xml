@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">AppMusic</string>
+    <string name="edittext_hint"><font size="14">Tìm kiếm bài hát, playlist, MV...</font></string>
 </resources>

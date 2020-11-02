@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="data"
+            type="com.thin.music.model.GetLinkMusic" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Bài hát:.........."
+            android:textColor="@color/colorWhite"
+            android:textSize="18sp"
+            app:setText="@{data.songName}"></TextView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Ca sĩ:.........."
+            android:textColor="@color/colorWhite"
+            android:textSize="18sp"
+            app:setText="@{data.artistName}"></TextView>
+
+        <TextView
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Lyric:.........."
+            android:textColor="@color/colorWhite"
+            android:textSize="18sp"
+            app:setText="@{data.lyric}"></TextView>
+    </LinearLayout>
+</layout>

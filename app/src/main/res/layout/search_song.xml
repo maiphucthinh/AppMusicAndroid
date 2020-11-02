@@ -17,8 +17,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rc"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@id/back" />
+            android:layout_height="match_parent" />
 
         <ProgressBar
             android:id="@+id/prg"
@@ -27,11 +26,5 @@
             android:layout_centerInParent="true"
             android:visibility="@{data.isRuning()? View.VISIBLE : View.GONE }"></ProgressBar>
 
-        <ImageButton
-            android:id="@+id/back"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_alignParentBottom="true"
-            android:src="@drawable/baseline_keyboard_backspace_black_24dp"></ImageButton>
     </RelativeLayout>
 </layout>

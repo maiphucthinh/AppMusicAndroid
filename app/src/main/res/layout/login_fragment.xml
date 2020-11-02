@@ -44,6 +44,7 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="38dp"
                     android:hint="Mật khẩu"
+                    android:inputType="textPassword"
                     android:textColor="@color/colorWhite"
                     android:textColorHint="@color/colorWhite" />
 

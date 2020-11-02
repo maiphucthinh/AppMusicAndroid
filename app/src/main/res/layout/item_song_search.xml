@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="data"
+            type="com.example.appmusic.model.ItemSong" />
+    </data>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="2dp"
+        android:background="@null"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="8dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/img"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/mylove1"
+                app:setImage="@{data.linkImage}"></ImageView>
+
+            <LinearLayout
+                android:id="@+id/string"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="18dp"
+                android:layout_toRightOf="@id/img"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/name_song"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:lines="1"
+                    android:text="name song"
+                    android:textSize="20sp"
+                    app:setText="@{data.songName}"></TextView>
+
+                <TextView
+                    android:id="@+id/artist_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Artist Name"
+                    android:textSize="14sp"
+                    app:setText="@{data.artistName}"></TextView>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_menu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:background="@null"
+                android:gravity="center"
+                android:text="..."
+                android:textSize="20sp"></Button>
+
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+
+</layout>

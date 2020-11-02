@@ -3,29 +3,10 @@
 
     <LinearLayout
         android:background="@drawable/bgmusic"
+        android:minHeight="312dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-
-        <TextView
-            android:textColor="@color/colorWhite"
-            android:id="@+id/name_song"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="8dp"
-            android:text="Bài hát:Bông hoa đẹp nhất"
-            android:textSize="18dp"></TextView>
-
-        <TextView
-            android:textColor="@color/colorWhite"
-            android:id="@+id/artist_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="8dp"
-            android:text="Ca sĩ:......"
-            android:textSize="18dp"></TextView>
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_marginTop="16dp"

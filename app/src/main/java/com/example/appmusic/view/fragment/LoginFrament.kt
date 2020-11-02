@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.appmusic.databinding.LoginFragmentBinding
-import com.example.appmusic.view.MainFragment
+import com.example.appmusic.view.MainActivity
 
 class LoginFrament : Fragment(), View.OnClickListener {
     private lateinit var binding: LoginFragmentBinding
@@ -23,6 +23,6 @@ class LoginFrament : Fragment(), View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
-        (activity as MainFragment).openRegester()
+        (activity as MainActivity).openRegester()
     }
 }

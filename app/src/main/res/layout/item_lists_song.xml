@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="4dp"
             android:layout_marginTop="4dp"
-            android:background="@color/colorPink" />
+            android:background="@color/colorGrey800" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rc_chart"

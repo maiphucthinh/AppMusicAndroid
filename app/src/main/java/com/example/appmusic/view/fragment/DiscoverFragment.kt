@@ -9,16 +9,15 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.appmusic.databinding.DiscoverPageBinding
 import com.example.appmusic.model.ItemSong
-import com.example.appmusic.model.ItemTopic
-import com.example.appmusic.view.MainFragment
+import com.example.appmusic.view.MainActivity
 import com.example.appmusic.view.adapter.DiscoverAdapter
-import com.example.appmusic.view.adapter.ChildDiscoverAdapter
 import com.thin.music.model.ItemMusicList
 
-class DiscoverFragment : Fragment(),  DiscoverAdapter.IDiscover {
+class DiscoverFragment : Fragment(), DiscoverAdapter.IDiscover {
 
     private lateinit var binding: DiscoverPageBinding
-    private lateinit var data: MainFragment
+    private lateinit var data: MainActivity
+    private var isCheckLoading = true
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -27,14 +26,13 @@ class DiscoverFragment : Fragment(),  DiscoverAdapter.IDiscover {
         binding = DiscoverPageBinding.inflate(
             inflater, container, false
         )
-        data = (activity as MainFragment)
+        data = (activity as MainActivity)
         data.getModel().getChart()
 
         binding.rc.layoutManager = LinearLayoutManager(context)
         binding.rc.adapter =
             DiscoverAdapter(this)
         register()
-        initListTopic()
         return binding.root
     }
 
@@ -42,33 +40,64 @@ class DiscoverFragment : Fragment(),  DiscoverAdapter.IDiscover {
         data.getModel().chart.observe(this, Observer {
             binding.rc.adapter!!.notifyDataSetChanged()
         })
-    }
 
-    private fun initListTopic() {
-//        listOfTopics.add(ItemTopic("Chart  >", DiscoverAdapter(this)))
-//        listOfTopics.add(ItemTopic("Chart  >", DiscoverAdapter(this)))
+        (activity as MainActivity).getModel().isLoading.observe(this, Observer {
+            isCheckLoading = it
 
-        data.getModel().getChart()
-
+            if (isCheckLoading) {
+                binding.prg.visibility = View.VISIBLE
+            } else
+                binding.prg.visibility = View.GONE
+        })
     }
 
     override fun getSizeChart(): Int {
-        if (data.getModel().chart.value == null){
+        if (data.getModel().chart.value == null) {
             return 0
         }
         return data.getModel().chart.value!!.size
     }
 
     override fun getItemChart(position: Int): ItemMusicList<ItemSong> {
-        return  data.getModel().chart.value!![position]
+        return data.getModel().chart.value!![position]
     }
 
+    override fun setOnClickMore(parentPosition: Int) {
+        (activity as MainActivity)
+            .openItemChildListSongFragment(parentPosition)
+    }
 
+    override fun setItemSongTypeTwo(
+        position: Int,
+        songName: String?,
+        artistName: String?,
+        linkSong: String?,
+        linkImage: String?,
+        listSong: MutableList<ItemSong>?
+    ) {
+        (activity as MainActivity).getModel().linkSong(linkSong)
+        if (listSong != null) {
+            (activity as MainActivity).initMedia(
+                position,
+                listSong
+            )
+        }
+    }
 
-
-
-
-    override fun setOnClickItem(position: Int) {
-
+    override fun setOnClickItem(parentPosition: Int, position: Int, linkTheme: String?) {
+        when (parentPosition) {
+            0 -> {
+                (activity as MainActivity).getModel().getLinkTheme(linkTheme)
+                (activity as MainActivity).openListTheme()
+            }
+            2, 3, 6 -> {
+                (activity as MainActivity).openChildListTheme()
+                (activity as MainActivity).getModel().getChildLinkTheme(linkTheme)
+            }
+            5 -> {
+                (activity as MainActivity).openParentPageArtist()
+                (activity as MainActivity).getModel().getAllArtistSong(linkTheme)
+            }
+        }
     }
 }

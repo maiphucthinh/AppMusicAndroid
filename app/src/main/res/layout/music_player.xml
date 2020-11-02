@@ -16,20 +16,21 @@
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="18dp"
                 android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/currenTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
                     android:text="00:00"
                     android:textColor="@color/colorWhite"
                     android:textSize="14sp"></TextView>
 
                 <SeekBar
                     android:id="@+id/sb"
-                    android:layout_width="match_parent"
+                    android:layout_width="324dp"
                     android:layout_height="18dp"
                     android:layout_gravity="center"
                     android:thumbTint="@color/colorRed"></SeekBar>
@@ -38,7 +39,7 @@
                     android:id="@+id/sumTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="298dp"
+                    android:layout_marginLeft="4dp"
                     android:text="00:00"
                     android:textColor="@color/colorWhite"
                     android:textSize="14sp"></TextView>
@@ -107,7 +108,7 @@
                     android:src="@drawable/baseline_favorite_border_white_24dp"></ImageButton>
 
                 <LinearLayout
-                    android:id="@+id/list_song"
+                    android:id="@+id/list"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
@@ -136,57 +137,132 @@
         <LinearLayout
             android:id="@+id/header"
             android:layout_width="match_parent"
-            android:layout_height="58dp"
+            android:layout_height="126dp"
             android:background="@color/colorGrey800"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
-            <ImageButton
-                android:id="@+id/out"
-                android:layout_width="38dp"
-                android:layout_height="38dp"
-                android:layout_marginLeft="12dp"
-                android:background="@null"
-                android:scaleType="centerCrop"
-                android:src="@drawable/baseline_keyboard_arrow_down_white_24dp"></ImageButton>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="6dp">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/img_child"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/mylove1" />
+
+                <LinearLayout
+                    android:id="@+id/layout_name"
+                    android:layout_width="194dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="12dp"
+                    android:layout_toRightOf="@id/img_child"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/child_song_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:lines="1"
+                        android:text="Name Song"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/child_singer_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:lines="1"
+                        android:text="Name singer"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/layout_name"
+                    android:orientation="horizontal">
+
+                    <ImageButton
+                        android:id="@+id/child_previous"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="@null"
+                        android:src="@drawable/baseline_skip_previous_white_24dp" />
+
+                    <ImageButton
+                        android:id="@+id/child_play_and_pause"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="@null"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/baseline_play_circle_outline_white_24dp" />
+
+                    <ImageButton
+                        android:id="@+id/child_next"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="@null"
+                        android:src="@drawable/baseline_skip_next_white_24dp" />
+                </LinearLayout>
+            </RelativeLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="12dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/song_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Name Song"
-                    android:textColor="@color/colorWhite"
-                    android:textSize="20sp"
-                    android:textStyle="bold"></TextView>
-
-                <TextView
-                    android:id="@+id/singer_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Name singer"
-                    android:textColor="@color/colorWhite"
-                    android:textSize="14sp"
-                    android:textStyle="bold"></TextView>
-
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/menu"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="188dp"
                 android:gravity="center_vertical"
-                android:text="..."
-                android:textColor="@color/colorWhite"
-                android:textSize="24sp"
-                android:textStyle="bold"></TextView>
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/out"
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:layout_marginLeft="12dp"
+                    android:background="@null"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/baseline_keyboard_arrow_down_white_24dp"></ImageButton>
+
+                <LinearLayout
+                    android:layout_width="198dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/song_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Name Song"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="20sp"
+                        android:textStyle="bold"></TextView>
+
+                    <TextView
+                        android:id="@+id/singer_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Name singer"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="14sp"
+                        android:textStyle="bold"></TextView>
+
+                </LinearLayout>
+
+                <ImageButton
+                    android:id="@+id/menu"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="68dp"
+                    android:background="@null"
+                    android:src="@drawable/baseline_more_horiz_white_24dp" />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -206,8 +282,7 @@
             <androidx.viewpager.widget.ViewPager
                 android:id="@+id/vp"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
+                android:layout_height="450dp" />
 
         </LinearLayout>
     </RelativeLayout>

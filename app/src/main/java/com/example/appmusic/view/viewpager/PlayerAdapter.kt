@@ -5,25 +5,18 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.example.appmusic.view.fragment.TabImageSongPlayer
 import com.example.appmusic.view.fragment.TabLyricsSong
+import com.example.appmusic.view.fragment.TabPlaylistFragment
 
-class PlayerAdapter(fragmentManager: FragmentManager) : FragmentPagerAdapter(fragmentManager) {
+class PlayerAdapter(fragmentManager: FragmentManager) :
+    FragmentPagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
     override fun getItem(position: Int): Fragment {
         when (position) {
-            0 -> return TabImageSongPlayer()
-            1 -> return TabLyricsSong()
-            else -> return TabImageSongPlayer()
+            0 -> return TabPlaylistFragment()
+            1 -> return TabImageSongPlayer()
+            else -> return TabLyricsSong()
         }
     }
 
-    override fun getCount(): Int {
-        return 2
-    }
+    override fun getCount() = 3
 
-    override fun getPageTitle(position: Int): CharSequence? {
-        when (position) {
-            0 -> return "."
-            1 -> return "."
-        }
-        return super.getPageTitle(position)
-    }
 }

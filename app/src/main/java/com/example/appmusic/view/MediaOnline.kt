@@ -5,23 +5,38 @@ import android.media.MediaPlayer
 import android.net.Uri
 import android.util.Log
 
-class MediaOnline : MediaPlayer(), MediaPlayer.OnErrorListener, MediaPlayer.OnPreparedListener {
+class MediaOnline : MediaPlayer.OnErrorListener, MediaPlayer.OnPreparedListener {
+    var inter: IMusicOnline? = null
     var player: MediaPlayer? = null
+    private var isPrepare = false
+
 
     fun setDataSoure(context: Context, link: String) {
         player = MediaPlayer()
         player!!.setOnErrorListener(this)
         player!!.setDataSource(context, Uri.parse(link))
         player!!.setOnPreparedListener(this)
+        isPrepare = false
         player!!.prepareAsync()
     }
+    fun isPrepare() = isPrepare
 
     override fun onError(mp: MediaPlayer?, what: Int, extra: Int): Boolean {
         Log.d("MusicOnline", "onError.......")
         return true
     }
 
-    override fun onPrepared(mp: MediaPlayer?) {
+    fun getTotalTime(): Int {
+        return player!!.duration
+    }
+
+    fun getCurentTime(): Int {
+        return player!!.currentPosition
+    }
+
+    override fun onPrepared(mp: MediaPlayer) {
+        isPrepare = true
+        inter?.onPrepared()
         mp!!.start()
     }
 
@@ -35,21 +50,27 @@ class MediaOnline : MediaPlayer(), MediaPlayer.OnErrorListener, MediaPlayer.OnPr
         player!!.start()
     }
 
-    override fun pause() {
+    fun pause() {
         if (player == null) {
             return
         }
         player!!.pause()
     }
-    override fun stop   (){
+
+    fun stop() {
         if (player == null) {
             return
         }
         player!!.stop()
     }
 
-    override fun release() {
+    fun release() {
+        isPrepare = false
         player?.release()
         player = null
+    }
+
+    interface IMusicOnline {
+        fun onPrepared()
     }
 }

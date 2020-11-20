@@ -9,11 +9,21 @@ import com.example.appmusic.view.fragment.TabPlaylistFragment
 
 class PlayerAdapter(fragmentManager: FragmentManager) :
     FragmentPagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+    var playList: TabPlaylistFragment
+    var img: TabImageSongPlayer
+    var lyrics: TabLyricsSong
+
+    init {
+        playList = TabPlaylistFragment()
+        img = TabImageSongPlayer()
+        lyrics = TabLyricsSong()
+    }
+
     override fun getItem(position: Int): Fragment {
         when (position) {
-            0 -> return TabPlaylistFragment()
-            1 -> return TabImageSongPlayer()
-            else -> return TabLyricsSong()
+            0 -> return playList
+            1 -> return img
+            else -> return lyrics
         }
     }
 

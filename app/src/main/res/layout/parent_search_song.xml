@@ -10,11 +10,11 @@
         android:orientation="vertical">
 
         <RelativeLayout
-            android:layout_marginTop="8dp"
-            android:layout_marginLeft="16dp"
             android:id="@+id/header"
             android:layout_width="match_parent"
-            android:layout_height="48dp">
+            android:layout_height="48dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="8dp">
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/avatar"
@@ -25,16 +25,16 @@
                 android:src="@drawable/mylove1" />
 
             <EditText
-                android:paddingLeft="16dp"
                 android:id="@+id/search"
-                android:lines="1"
                 android:layout_width="244dp"
                 android:layout_height="32dp"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="8dp"
                 android:layout_toRightOf="@id/avatar"
                 android:background="@drawable/edittext_search"
-                android:hint="@string/edittext_hint"></EditText>
+                android:hint="@string/edittext_hint"
+                android:lines="1"
+                android:paddingLeft="16dp"></EditText>
 
             <ImageButton
 
@@ -55,6 +55,7 @@
             android:layout_height="36dp"
             app:tabIndicatorColor="@color/colorRed"
             app:tabSelectedTextColor="@color/colorRed"
+            app:tabTextAppearance="@style/TabLayoutStyle"
             app:tabTextColor="@color/colorWhite" />
 
         <androidx.viewpager.widget.ViewPager

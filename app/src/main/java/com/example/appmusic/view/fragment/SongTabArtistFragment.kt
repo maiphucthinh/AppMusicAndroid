@@ -4,9 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.appmusic.R
 import com.example.appmusic.databinding.TabSearchPlayListFragmentBinding
 import com.example.appmusic.model.ItemSong
 import com.example.appmusic.view.MainActivity
@@ -55,12 +58,33 @@ class SongTabArtistFragment : Fragment(), ChildDiscoverChartAdapter.IChart {
     }
 
     override fun setOnclickItemChart(position: Int) {
-        (activity as MainActivity).getModel().linkSong(
-             (activity as MainActivity).
-            getModel().listArtistSong.value!![0].values[position].linkSong
+        (activity as MainActivity).initMedia(
+            position,
+            (activity as MainActivity).getModel().listArtistSong.value!![0].values
         )
-        val listSong = (activity as MainActivity).
-        getModel().listArtistSong.value!![0].values
-        (activity as MainActivity).initMedia(position,listSong)
+    }
+
+    override fun setOnClickPopupMenu(position: Int, btn: Button) {
+        val menu = PopupMenu(context, btn)
+        menu.menuInflater.inflate(R.menu.menu_itemsong_online, menu.menu)
+        menu.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.down_load -> {
+                    val linkSong =
+                        (activity as MainActivity).getModel()
+                            .listArtistSong.value!![0].values[position].linkSong
+                    (activity as MainActivity).downLoadSong(linkSong)
+                }
+                R.id.delete -> {
+                    binding.rcAlbums.adapter!!.notifyItemRemoved(position)
+                    (activity as MainActivity)
+                        .getModel().listArtistSong.value!![0]
+                        .values.removeAt(position)
+                    binding.rcAlbums.adapter!!.notifyItemChanged(position)
+                }
+            }
+            true
+        }
+        menu.show()
     }
 }

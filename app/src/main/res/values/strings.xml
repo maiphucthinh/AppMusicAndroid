@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">AppMusic</string>
     <string name="edittext_hint"><font size="14">Tìm kiếm bài hát, playlist, MV...</font></string>
+    <string name="tat_ca"><font size="14">Tất cả</font></string>
+    <string name="bai_hat"><font size="14">Bài hát</font></string>
+    <string name="playlist"><font size="14">Playlist</font></string>
+    <string name="mv"><font size="14">mv</font></string>
+    <string name="nghe_si"><font size="14">Nghệ sĩ</font></string>
 </resources>

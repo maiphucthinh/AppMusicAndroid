@@ -40,7 +40,7 @@
                 android:lines="1"
                 android:text="name song"
                 android:textColor="@color/colorBlack"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 app:setText="@{data.songName}"></TextView>
 
             <TextView
@@ -49,7 +49,7 @@
                 android:layout_height="wrap_content"
                 android:lines="1"
                 android:text="Artist Name"
-                android:textSize="12sp"
+                android:textSize="10sp"
                 app:setText="@{data.artistName}"></TextView>
         </LinearLayout>
 

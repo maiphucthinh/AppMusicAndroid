@@ -4,9 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.appmusic.R
 import com.example.appmusic.databinding.DiscoverPageBinding
 import com.example.appmusic.model.ItemSong
 import com.example.appmusic.view.MainActivity
@@ -69,13 +73,8 @@ class DiscoverFragment : Fragment(), DiscoverAdapter.IDiscover {
 
     override fun setItemSongTypeTwo(
         position: Int,
-        songName: String?,
-        artistName: String?,
-        linkSong: String?,
-        linkImage: String?,
         listSong: MutableList<ItemSong>?
     ) {
-        (activity as MainActivity).getModel().linkSong(linkSong)
         if (listSong != null) {
             (activity as MainActivity).initMedia(
                 position,
@@ -90,7 +89,7 @@ class DiscoverFragment : Fragment(), DiscoverAdapter.IDiscover {
                 (activity as MainActivity).getModel().getLinkTheme(linkTheme)
                 (activity as MainActivity).openListTheme()
             }
-            2, 3, 6 -> {
+            2, 3, 6, 7 -> {
                 (activity as MainActivity).openChildListTheme()
                 (activity as MainActivity).getModel().getChildLinkTheme(linkTheme)
             }
@@ -99,5 +98,30 @@ class DiscoverFragment : Fragment(), DiscoverAdapter.IDiscover {
                 (activity as MainActivity).getModel().getAllArtistSong(linkTheme)
             }
         }
+    }
+
+    override fun setOnClickPopupMenu(
+        parentPosition: Int,
+        position: Int,
+        rc: RecyclerView,
+        btn: Button,
+        linkSong: String
+    ) {
+        val menu = PopupMenu(context, btn)
+        menu.menuInflater.inflate(R.menu.menu_itemsong_online, menu.menu)
+        menu.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.down_load -> {
+                    (activity as MainActivity).downLoadSong(linkSong)
+                }
+                R.id.delete -> {
+                    rc.adapter!!.notifyItemRemoved(position)
+                    data.getModel().chart.value!![parentPosition].values.removeAt(position)
+                    rc.adapter!!.notifyItemChanged(position)
+                }
+            }
+            true
+        }
+        menu.show()
     }
 }

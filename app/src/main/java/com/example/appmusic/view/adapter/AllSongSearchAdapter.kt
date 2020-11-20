@@ -3,7 +3,6 @@ package com.example.appmusic.view.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.appmusic.databinding.ItemSearchAllBinding
@@ -46,34 +45,38 @@ class AllSongSearchAdapter : RecyclerView.Adapter<AllSongSearchAdapter.AllSearch
             }
 
             override fun getSongOnline(position: Int): ItemSong? {
-                if (data.values == null) {
-                    return null
-                }
                 return data.values[position]
             }
 
             override fun setOnClickItem(position: Int) {
                 val artist = data.values[position].linkSinger
-                val link = data.values[position].linkSong
+                val linkTheme = data.values[position].linkAlbum
+                val linkSong = data.values[position].linkSong
                 iAllSearch.setOnClickItem(
                     parentPosition,
                     position,
-                    link,
+                    linkTheme,
                     artist,
-                    data.values
+                    data.values,
+                    linkSong
                 )
 
             }
 
             override fun setOnClickMenu(position: Int, btnMenu: Button) {
-
+                var linkSong: String? = null
+                if (parentPosition == 0) {
+                    linkSong = data.values[position].linkSong
+                }
+                val rc = holder.binding.rcItem
+                iAllSearch.setOnclickPopupMenu(parentPosition, position, btnMenu, rc, linkSong)
             }
 
         }
         holder.binding.btnMore.setOnClickListener {
             iAllSearch.setOnclickMore(parentPosition)
         }
-        holder.binding.nameList.setText(data.name)
+        holder.binding.nameList.text = data.name
         if (holder.binding.rcItem.adapter == null) {
             holder.binding.rcItem.adapter = ItemSongSearchAdapter(iTopic)
         } else {
@@ -94,9 +97,18 @@ class AllSongSearchAdapter : RecyclerView.Adapter<AllSongSearchAdapter.AllSearch
             position: Int,
             linkTheme: String?,
             linkArtist: String?,
-            listSong: MutableList<ItemSong>
+            listSong: MutableList<ItemSong>,
+            linkSong: String?
         )
 
         fun setOnclickMore(parentPosition: Int)
+        fun setOnclickPopupMenu(
+            parentPosition: Int,
+            position: Int,
+            btnMenu: Button,
+            rc: RecyclerView,
+            linkSong: String?
+
+        )
     }
 }

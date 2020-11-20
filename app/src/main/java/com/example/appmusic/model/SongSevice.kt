@@ -20,6 +20,9 @@ interface SongSevice {
     @GET("/api/getVideo")
     fun getVideo(): Observable<MutableList<ItemSearchOnline>>
 
+    @GET("/api/getSuggestionsVideo")
+    fun getSuggestionsVideo(): Observable<MutableList<ItemSearchOnline>>
+
     @GET("/api/getTheme")
     fun getLinkTheme(
         @Query(value = "linkTheme") linkTheme: String?

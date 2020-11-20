@@ -4,10 +4,9 @@
 
 
     <LinearLayout
-
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
+        android:layout_marginTop="28dp"
         android:layout_marginBottom="8dp"
         android:orientation="vertical">
 
@@ -17,13 +16,14 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="18dp"
             android:text="Chart   >"
-            android:textSize="22sp"
+            android:textSize="18sp"
+            android:textColor="@color/colorBlack"
             android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="4dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="12dp"
             android:background="@color/colorGrey800" />
 
         <LinearLayout
@@ -41,11 +41,13 @@
 
             <Button
                 android:id="@+id/more"
-                android:layout_width="128dp"
-                android:layout_height="38dp"
+                android:layout_width="98dp"
+                android:layout_height="28dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="6dp"
                 android:layout_marginBottom="6dp"
+                android:textColor="@color/colorWhite"
+                android:textSize="12sp"
                 android:background="@drawable/btn_login"
                 android:text="Xem thêm"></Button>
         </LinearLayout>

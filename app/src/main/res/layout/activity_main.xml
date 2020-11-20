@@ -40,7 +40,7 @@
                     android:background="@color/colorGrey800"
                     android:orientation="vertical">
 
-                    <LinearLayout
+                    <RelativeLayout
                         android:layout_width="wrap_content"
                         android:layout_height="18dp"
                         android:orientation="horizontal">
@@ -56,19 +56,22 @@
 
                         <SeekBar
                             android:id="@+id/sb"
-                            android:layout_width="324dp"
+                            android:layout_width="match_parent"
                             android:layout_height="18dp"
-                            android:layout_gravity="center"></SeekBar>
+                            android:layout_gravity="center"
+                            android:layout_toLeftOf="@id/sumTime"
+                            android:layout_toRightOf="@id/currenTime"></SeekBar>
 
                         <TextView
                             android:id="@+id/sumTime"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="4dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="4dp"
                             android:text="00:00"
                             android:textColor="@color/colorWhite"
                             android:textSize="14sp"></TextView>
-                    </LinearLayout>
+                    </RelativeLayout>
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -79,8 +82,9 @@
 
                         <ImageButton
                             android:id="@+id/random"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="38dp"
+                            android:layout_height="38dp"
+                            android:layout_marginTop="10dp"
                             android:background="@null"
                             android:src="@drawable/baseline_swap_calls_white_24dp"></ImageButton>
 
@@ -89,8 +93,8 @@
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:layout_marginLeft="24dp"
+                            android:layout_marginTop="4dp"
                             android:background="@null"
-                            android:scaleType="centerCrop"
                             android:src="@drawable/baseline_skip_previous_white_24dp"></ImageButton>
 
                         <ImageButton
@@ -107,15 +111,16 @@
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:layout_marginLeft="24dp"
+                            android:layout_marginTop="4dp"
                             android:background="@null"
-                            android:scaleType="centerCrop"
                             android:src="@drawable/baseline_skip_next_white_24dp"></ImageButton>
 
                         <ImageButton
                             android:id="@+id/repeat"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="38dp"
+                            android:layout_height="38dp"
                             android:layout_marginLeft="24dp"
+                            android:layout_marginTop="10dp"
                             android:background="@null"
                             android:src="@drawable/baseline_repeat_white_24dp"></ImageButton>
                     </LinearLayout>
@@ -126,8 +131,8 @@
 
                         <ImageButton
                             android:id="@+id/like"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="38dp"
+                            android:layout_height="38dp"
                             android:layout_marginLeft="24dp"
                             android:background="@null"
                             android:src="@drawable/baseline_favorite_border_white_24dp"></ImageButton>
@@ -162,7 +167,7 @@
                 <LinearLayout
                     android:id="@+id/header"
                     android:layout_width="match_parent"
-                    android:layout_height="126dp"
+                    android:layout_height="166dp"
                     android:background="@color/colorGrey800"
                     android:orientation="vertical">
 
@@ -181,7 +186,7 @@
 
                         <LinearLayout
                             android:id="@+id/layout_name"
-                            android:layout_width="194dp"
+                            android:layout_width="174dp"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="12dp"
@@ -192,10 +197,11 @@
                                 android:id="@+id/child_song_name"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginLeft="2dp"
                                 android:lines="1"
                                 android:text="Name Song"
                                 android:textColor="@color/colorWhite"
-                                android:textSize="20sp"
+                                android:textSize="16sp"
                                 android:textStyle="bold" />
 
                             <TextView
@@ -205,41 +211,43 @@
                                 android:lines="1"
                                 android:text="Name singer"
                                 android:textColor="@color/colorWhite"
-                                android:textSize="14sp"
-                                android:textStyle="bold" />
+                                android:textSize="12sp" />
                         </LinearLayout>
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginTop="6dp"
                             android:layout_toRightOf="@id/layout_name"
                             android:orientation="horizontal">
 
                             <ImageButton
                                 android:id="@+id/child_previous"
-                                android:layout_width="48dp"
-                                android:layout_height="48dp"
+                                android:layout_width="38dp"
+                                android:layout_height="38dp"
                                 android:background="@null"
                                 android:src="@drawable/baseline_skip_previous_white_24dp" />
 
                             <ImageButton
                                 android:id="@+id/child_play_and_pause"
-                                android:layout_width="48dp"
-                                android:layout_height="48dp"
+                                android:layout_width="38dp"
+                                android:layout_height="38dp"
                                 android:background="@null"
                                 android:scaleType="centerCrop"
                                 android:src="@drawable/baseline_play_circle_outline_white_24dp" />
 
                             <ImageButton
                                 android:id="@+id/child_next"
-                                android:layout_width="48dp"
-                                android:layout_height="48dp"
+                                android:layout_width="38dp"
+                                android:layout_height="38dp"
                                 android:background="@null"
                                 android:src="@drawable/baseline_skip_next_white_24dp" />
                         </LinearLayout>
                     </RelativeLayout>
 
                     <LinearLayout
+                        android:layout_marginTop="62dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
@@ -247,30 +255,30 @@
 
                         <ImageButton
                             android:id="@+id/out"
-                            android:layout_width="38dp"
-                            android:layout_height="38dp"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
                             android:layout_marginLeft="12dp"
-                            android:layout_marginTop="16dp"
                             android:background="@null"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/baseline_keyboard_arrow_down_white_24dp"></ImageButton>
+                            android:src="@drawable/baseline_keyboard_arrow_down_white_24dp" />
 
                         <LinearLayout
+                            android:layout_marginTop="38dp"
                             android:layout_width="198dp"
-                            android:layout_height="58dp"
+                            android:layout_height="128dp"
                             android:layout_marginLeft="12dp"
-                            android:layout_marginTop="16dp"
                             android:orientation="vertical">
 
                             <TextView
                                 android:id="@+id/song_name"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginLeft="2dp"
                                 android:lines="1"
                                 android:text="Name Song"
                                 android:textColor="@color/colorWhite"
-                                android:textSize="20sp"
-                                android:textStyle="bold"></TextView>
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
 
                             <TextView
                                 android:id="@+id/singer_name"
@@ -279,18 +287,15 @@
                                 android:lines="1"
                                 android:text="Name singer"
                                 android:textColor="@color/colorWhite"
-                                android:textSize="14sp"
-                                android:textStyle="bold"></TextView>
+                                android:textSize="12sp" />
 
                         </LinearLayout>
 
                         <ImageButton
                             android:id="@+id/menu"
-                            android:layout_width="36dp"
-                            android:layout_height="36dp"
-                            android:layout_gravity="center_vertical"
+                            android:layout_width="26dp"
+                            android:layout_height="26dp"
                             android:layout_marginLeft="68dp"
-                            android:layout_marginTop="16dp"
                             android:background="@null"
                             android:src="@drawable/baseline_more_horiz_white_24dp" />
                     </LinearLayout>
@@ -488,8 +493,10 @@
                     <Button
                         android:id="@+id/close_menu"
                         android:layout_width="match_parent"
-                        android:layout_height="46dp"
+                        android:layout_height="38dp"
+                        android:layout_marginLeft="12dp"
                         android:layout_marginTop="28dp"
+                        android:layout_marginRight="12dp"
                         android:layout_marginBottom="8dp"
                         android:background="@drawable/btn_login"
                         android:text="Đóng"
@@ -507,64 +514,64 @@
                         android:layout_margin="24dp"
                         android:text="HẸN GIỜ TẮT"
                         android:textColor="@color/colorBlack"
-                        android:textSize="20sp"
+                        android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="2dp"
-                            android:layout_centerInParent="true"
-                            android:background="@color/colorBlack" />
-
                         <RadioGroup
                             android:id="@+id/gr_time"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal">
+                            android:layout_marginLeft="38dp"
+                            android:orientation="horizontal"
+                            android:weightSum="4">
 
                             <RadioButton
+
                                 android:id="@+id/rg1"
                                 android:layout_width="38dp"
                                 android:layout_height="38dp"
+                                android:layout_weight="1"
                                 android:background="@color/colorWhite" />
 
                             <RadioButton
                                 android:id="@+id/rg2"
                                 android:layout_width="38dp"
                                 android:layout_height="38dp"
-                                android:layout_marginLeft="86dp"
+                                android:layout_weight="1"
                                 android:background="@color/colorWhite" />
 
                             <RadioButton
                                 android:id="@+id/rg3"
                                 android:layout_width="38dp"
                                 android:layout_height="38dp"
-                                android:layout_marginLeft="86dp"
+                                android:layout_weight="1"
                                 android:background="@color/colorWhite" />
 
                             <RadioButton
                                 android:id="@+id/rg4"
                                 android:layout_width="38dp"
                                 android:layout_height="38dp"
-                                android:layout_marginLeft="88dp"
+                                android:layout_weight="1"
                                 android:background="@color/colorWhite" />
                         </RadioGroup>
                     </RelativeLayout>
 
                     <LinearLayout
+                        android:layout_marginLeft="48dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:weightSum="4">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="6dp"
+                            android:layout_weight="1"
                             android:text="30'"
                             android:textColor="@color/colorBlack"
                             android:textSize="16sp" />
@@ -572,7 +579,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="106dp"
+                            android:layout_weight="1"
                             android:text="60'"
                             android:textColor="@color/colorBlack"
                             android:textSize="16sp" />
@@ -580,7 +587,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="102dp"
+                            android:layout_weight="1"
                             android:text="90'"
                             android:textColor="@color/colorBlack"
                             android:textSize="16sp" />
@@ -588,7 +595,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="102dp"
+                            android:layout_weight="1"
                             android:text="120'"
                             android:textColor="@color/colorBlack"
                             android:textSize="16sp" />
@@ -620,8 +627,10 @@
                     <Button
                         android:id="@+id/close_timer"
                         android:layout_width="match_parent"
-                        android:layout_height="46dp"
+                        android:layout_height="36dp"
+                        android:layout_marginLeft="12dp"
                         android:layout_marginTop="28dp"
+                        android:layout_marginRight="12dp"
                         android:layout_marginBottom="16dp"
                         android:background="@drawable/btn_login"
                         android:text="Đóng"

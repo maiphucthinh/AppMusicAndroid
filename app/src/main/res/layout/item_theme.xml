@@ -20,8 +20,8 @@
 
             <ImageView
                 android:id="@+id/img_theme"
-                android:layout_width="226dp"
-                android:layout_height="126dp"
+                android:layout_width="196dp"
+                android:layout_height="106dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/bgmusic"
                 app:setImage="@{data.linkImage}"></ImageView>
@@ -33,7 +33,7 @@
                 android:layout_centerInParent="true"
                 android:text="BXH Việt Nam"
                 android:textColor="@color/colorWhite"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:textStyle="bold"
                 app:setText="@{data.songName}"></TextView>
         </RelativeLayout>

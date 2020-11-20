@@ -12,11 +12,9 @@ import com.example.appmusic.view.MainActivity
 import com.example.appmusic.view.adapter.ItemChildVideoAdapter
 import com.thin.music.model.ItemSearchOnline
 
-class ListVideoChildFragment : Fragment(), OpenVideoOnlineFragment.ICheckNextVideo,
+class ListVideoChildFragment : Fragment(),
     ItemChildVideoAdapter.IChildVideo {
     private lateinit var binding: ListChildVideoBinding
-    private var openVideo: OpenVideoOnlineFragment? = null
-    var index = 0
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -25,51 +23,43 @@ class ListVideoChildFragment : Fragment(), OpenVideoOnlineFragment.ICheckNextVid
         binding = ListChildVideoBinding.inflate(
             inflater, container, false
         )
-        openVideo = OpenVideoOnlineFragment()
-        openVideo?.isCheck = this
         binding.rc.layoutManager = LinearLayoutManager(context)
         binding.rc.adapter = ItemChildVideoAdapter(this)
         binding.prg.visibility = View.GONE
+        (activity as MainActivity).getModel().getSuggestionsVideo()
         register()
         return binding.root
     }
 
     private fun register() {
-        (activity as MainActivity).getModel().listVideo.observe(this, androidx.lifecycle.Observer {
+        (activity as MainActivity).getModel().listSuggestionsVideo.observe(this, androidx.lifecycle.Observer {
             binding.rc.adapter!!.notifyDataSetChanged()
-            openVideo?.isCheck = this
         })
     }
-
-    override fun getSizeVideo(): Int {
-        if ((activity as MainActivity).getModel().listVideo.value == null) {
-            return 0
-        }
-        return (activity as MainActivity).getModel().listVideo.value!!.size
-    }
-
-    override fun getListVideo(position: Int): ItemSearchOnline {
-        return (activity as MainActivity).getModel().listVideo.value!![position]
-    }
-
-    override fun setOnClickItemVideo(position: Int) {
-        val data = (activity as MainActivity).getModel().listVideo.value!![position]
+    fun nextVideo(){
+        val data = (activity as MainActivity).getModel().listSuggestionsVideo.value!![0]
         (activity as MainActivity).getModel().getLinkVideo(
             data.linkMusic
         )
+        (activity as MainActivity).getModel().getSuggestionsVideo()
     }
 
-    override fun setColor(position: Int): Int? {
-//        if (position == index) {
-//            return Color.parseColor("#FFECB3")
-//        }
-        return null
+    override fun getSizeVideo(): Int {
+        if ((activity as MainActivity).getModel().listSuggestionsVideo.value == null) {
+            return 0
+        }
+        return (activity as MainActivity).getModel().listSuggestionsVideo.value!!.size
     }
 
-
-    override fun isCheckNextVieo() {
-        TODO("Not yet implemented")
+    override fun getListVideo(position: Int): ItemSearchOnline {
+        return (activity as MainActivity).getModel().listSuggestionsVideo.value!![position]
     }
 
-
+    override fun setOnClickItemVideo(position: Int) {
+        val data = (activity as MainActivity).getModel().listSuggestionsVideo.value!![position]
+        (activity as MainActivity).getModel().getLinkVideo(
+            data.linkMusic
+        )
+        (activity as MainActivity).getModel().getSuggestionsVideo()
+    }
 }

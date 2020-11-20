@@ -2,6 +2,7 @@ package com.example.appmusic.view.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.recyclerview.widget.RecyclerView
 import com.example.appmusic.databinding.ItemChartBinding
 import com.example.appmusic.model.ItemSong
@@ -30,6 +31,10 @@ class ChildDiscoverChartAdapter : RecyclerView.Adapter<ChildDiscoverChartAdapter
         holder.binding.root.setOnClickListener {
             iChart.setOnclickItemChart(position)
         }
+        val btn = holder.binding.btnMenu
+        btn.setOnClickListener {
+            iChart.setOnClickPopupMenu(position, btn)
+        }
     }
 
     class ChartHolder(val binding: ItemChartBinding) : RecyclerView.ViewHolder(binding.root)
@@ -38,5 +43,6 @@ class ChildDiscoverChartAdapter : RecyclerView.Adapter<ChildDiscoverChartAdapter
         fun getSizeChart(): Int
         fun getListChart(position: Int): ItemSong
         fun setOnclickItemChart(position: Int)
+        fun setOnClickPopupMenu(position: Int, btn: Button)
     }
 }

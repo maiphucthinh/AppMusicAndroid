@@ -7,6 +7,7 @@ class ItemSearchOnline {
     var linkArtist: String? = null
     var title: String? = null
     var artistName: String? = null
+    var time: String? = null
 
     constructor(id: String?, linkImage: String?, linkMusic: String?, title: String?, artistName: String?) {
         this.id = id

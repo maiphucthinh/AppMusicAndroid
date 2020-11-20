@@ -11,9 +11,9 @@ import com.example.appmusic.databinding.ParentSearchSongBinding
 import com.example.appmusic.view.MainActivity
 import com.example.appmusic.view.Utils
 import com.example.appmusic.view.fragment.TabAllSearchSongFragment
-import com.google.android.material.tabs.TabLayout
 
-class ParentSearchSong : Fragment(), View.OnClickListener, TabAllSearchSongFragment.IClickMore {
+
+class ParentSearchSong : Fragment(), View.OnClickListener{
     private lateinit var binding: ParentSearchSongBinding
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,6 +31,7 @@ class ParentSearchSong : Fragment(), View.OnClickListener, TabAllSearchSongFragm
             binding.vpg
         )
         binding.searching.setOnClickListener(this)
+        binding.avatar.setOnClickListener(this)
         register()
 
         return binding.root
@@ -50,10 +51,6 @@ class ParentSearchSong : Fragment(), View.OnClickListener, TabAllSearchSongFragm
         })
     }
 
-    override fun setCLickItem(position: Int) {
-        binding.vpg.currentItem = position
-    }
-
     fun setCLickNext(position: Int) {
         binding.vpg.currentItem = position
 
@@ -71,8 +68,8 @@ class ParentSearchSong : Fragment(), View.OnClickListener, TabAllSearchSongFragm
                 (activity as MainActivity).getModel().getSearchAll(content)
                 binding.search.setText("")
             }
+            R.id.avatar -> (activity as MainActivity).openLogin()
         }
     }
-
 
 }

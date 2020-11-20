@@ -23,6 +23,6 @@ class LoginFrament : Fragment(), View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
-        (activity as MainActivity).openRegester()
+        (activity as MainActivity).openRegister()
     }
 }

@@ -2,13 +2,9 @@ package com.example.appmusic.view.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.appmusic.databinding.ItemListsSongBinding
 import com.example.appmusic.databinding.ItemSquareSongBinding
-import com.example.appmusic.model.ItemChart
 import com.example.appmusic.model.ItemSong
-import com.example.appmusic.model.ItemTopic
 
 class ChildDiscoverAdapter : RecyclerView.Adapter<ChildDiscoverAdapter.ChildHolder> {
 
@@ -33,7 +29,7 @@ class ChildDiscoverAdapter : RecyclerView.Adapter<ChildDiscoverAdapter.ChildHold
         val data = iTopic.getData(position)
         holder.binding.data = data
         holder.binding.root.setOnClickListener {
-            iTopic.setOnClicItem(position)
+            iTopic.setOnClickItem(position)
         }
     }
 
@@ -42,7 +38,7 @@ class ChildDiscoverAdapter : RecyclerView.Adapter<ChildDiscoverAdapter.ChildHold
     interface ITopic {
         fun getSize(): Int
         fun getData(position: Int): ItemSong
-        fun setOnClicItem(position: Int)
+        fun setOnClickItem(position: Int)
     }
 
 }

@@ -16,8 +16,8 @@
         android:orientation="vertical">
 
         <androidx.cardview.widget.CardView
-            android:layout_width="368dp"
-            android:layout_height="226dp"
+            android:layout_width="328dp"
+            android:layout_height="186dp"
             android:layout_gravity="center"
             app:cardCornerRadius="12dp">
 
@@ -33,11 +33,11 @@
             android:id="@+id/name_video"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="22dp"
             android:layout_marginTop="8dp"
             android:text="name video"
             android:textColor="@color/colorBlack"
-            android:textSize="18sp"
+            android:textSize="14sp"
             app:setText="@{data.title}"></TextView>
 
         <TextView
@@ -45,10 +45,10 @@
             android:id="@+id/singer_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="22dp"
             android:layout_marginTop="4dp"
             android:text="Ánh minh"
-            android:textSize="14sp"
+            android:textSize="10sp"
             app:setText="@{data.artistName}"></TextView>
     </LinearLayout>
 </layout>

@@ -32,12 +32,7 @@ class TabImageSongPlayer : Fragment() {
             (activity as MainActivity).setImageForTabImageSong(binding.imgSong)
         })
     }
-
-    override fun onResume() {
-        super.onResume()
-    }
-
-    override fun onPause() {
-        super.onPause()
+    fun setImage(){
+        (activity as MainActivity).setImageForTabImageSong(binding.imgSong)
     }
 }

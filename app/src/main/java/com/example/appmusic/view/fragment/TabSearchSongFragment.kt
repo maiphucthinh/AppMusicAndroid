@@ -26,13 +26,13 @@ class TabSearchSongFragment : Fragment(), ItemSongSearchAdapter.ISongOnline,
     private var index = 0
     private var parentIndex = 0
     private var isCheckLoading = false
-    private var isDestroyView = false
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        isDestroyView = false
+
         binding = SearchSongBinding.inflate(
             inflater, container, false
         )
@@ -73,10 +73,6 @@ class TabSearchSongFragment : Fragment(), ItemSongSearchAdapter.ISongOnline,
     }
 
     override fun setOnClickItem(position: Int) {
-
-        data.getModel().linkSong(
-            (activity as MainActivity).getModel().listSearchAll.value!![parentIndex].values[position].linkMusic
-        )
         (activity as MainActivity).initMedia(
             position,
             (activity as MainActivity).getModel().listSearchAll.value!![parentIndex].values
@@ -91,42 +87,18 @@ class TabSearchSongFragment : Fragment(), ItemSongSearchAdapter.ISongOnline,
         menu.show()
     }
 
-    override fun onMenuItemClick(item: MenuItem?): Boolean {
-        val linkHtml =
-            (activity as MainActivity).getModel().listSearchAll.value!![parentIndex].values[index].linkSong!!
-        (activity as MainActivity).getModel()
-            .linkSong(linkHtml,
-                {
-                    Utils.downloadFileFromInternet(
-                        it.link, context = activity
-                    ) { link, path, name ->
-                        run {
-                            if (isDestroyView) {
-                                return@run
-                            }
-                            Toast.makeText(activity, "Finish download: " + name, Toast.LENGTH_SHORT)
-                                .show()
-                        }
-                    }
-                    if (it.link != null) {
-                        return@linkSong it.link
-                    } else {
-                        "Error"
-                    }
-
-                },
-                {
-
-                }
-            )
-
+    override fun onMenuItemClick(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.down_load ->{
+                val linkHtml =
+                    (activity as MainActivity).getModel().listSearchAll.value!![parentIndex].values[index].linkSong!!
+                (activity as MainActivity).downLoadSong(linkHtml)
+            }
+            R.id.delete->{
+                binding.rc.adapter!!.notifyItemRemoved(index)
+                binding.rc.adapter!!.notifyItemChanged(index)
+            }
+        }
         return false
     }
-
-    override fun onDestroyView() {
-        isDestroyView = true
-        super.onDestroyView()
-    }
-
-
 }

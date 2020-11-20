@@ -17,23 +17,29 @@ import androidx.core.app.NotificationCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
+import com.example.appmusic.MyApp
 import com.example.appmusic.R
 import com.example.appmusic.model.ItemSong
 import com.example.appmusic.viewmodel.SongViewModel
 
-class SongService : Service(), MediaOnline.IMusicOnline {
+class SongService : Service(), MediaOnline.IMusicMedia, MediaPlayer.OnCompletionListener {
     private lateinit var mediaOnline: MediaOnline
+    private lateinit var mediaOffline: MediaOffline
     private val idChannel = "MY_CHANEL"
     private var currentSong: ItemSong? = null
-    var currentPossition = 0
-    var model : SongViewModel? = null
+    var currentPosition = 0
+    var isCheckCurrentType = false
+    var model: SongViewModel? = null
     var itemSong = mutableListOf<ItemSong>()
-    var inter: MediaOnline.IMusicOnline? = null
+    var inter: MediaOnline.IMusicMedia? = null
     override fun onCreate() {
         super.onCreate()
+        mediaOffline = MediaOffline()
         mediaOnline = MediaOnline()
         mediaOnline.inter = this
+        mediaOffline.inter = this
     }
+
     override fun onBind(intent: Intent?): IBinder? {
         return MyBinder(this)
     }
@@ -46,72 +52,126 @@ class SongService : Service(), MediaOnline.IMusicOnline {
     }
 
     private fun handlerIntent(intent: Intent) {
-        val action = intent.action
-        if (action == null) {
-            return
-        }
+        val action = intent.action ?: return
         when (action) {
             "PREVIOUS" -> {
-                    if (currentPossition == 0) {
-                        currentPossition = itemSong.size - 1
-                    } else currentPossition -= 1
-                model?.linkSong(itemSong[currentPossition].linkSong)
+                if (currentPosition == 0) {
+                    currentPosition = itemSong.size - 1
+                } else currentPosition -= 1
+                if (isCheckCurrentType) {
+                    model?.linkSong(itemSong[currentPosition].linkSong)
+                } else
+                    setDataSourceOffline(itemSong[currentPosition])
 
             }
             "PLAY" -> {
-                if (mediaOnline.isPrepare()) {
-                    if (mediaOnline.player!!.isPlaying) {
-                        mediaOnline.pause()
+                if (isCheckCurrentType) {
+                    if (mediaOnline.isPrepare()) {
+                        if (mediaOnline.player!!.isPlaying) {
+                            MyApp.getAppModel().postAction("PAUSE")
+                            mediaOnline.pause()
+                            if (currentSong != null) {
+                                createNotification(currentSong!!, false)
+                            }
+
+                        } else {
+                            mediaOnline.play()
+                            MyApp.getAppModel().postAction("PLAY")
+                            createNotification(currentSong!!)
+                        }
+                    }
+                } else {
+                    if (mediaOffline.player!!.isPlaying) {
+                        mediaOffline.pause()
                         if (currentSong != null) {
                             createNotification(currentSong!!, false)
                         }
 
                     } else {
-                        mediaOnline.play()
+                        mediaOffline.play()
                         createNotification(currentSong!!)
                     }
                 }
             }
             "NEXT" -> {
-                if (currentPossition == itemSong.size-1) {
-                    currentPossition = 0
-                } else currentPossition += 1
-                model?.linkSong(itemSong[currentPossition].linkSong)
+                if (currentPosition == itemSong.size - 1) {
+                    currentPosition = 0
+                } else currentPosition += 1
+                if (isCheckCurrentType) {
+                    model?.linkSong(itemSong[currentPosition].linkSong)
+                } else
+                    setDataSourceOffline(itemSong[currentPosition])
+
             }
         }
     }
 
-    fun release() {
+    fun releaseOnline() {
         mediaOnline.release()
     }
 
-    fun setDataSoure(song: ItemSong) {
+    fun setDataSourceOnline(song: ItemSong) {
         currentSong = song
-        mediaOnline.setDataSoure(this, song.linkSong)
+        mediaOnline.setDataSource(this, song.linkSong)
         createNotification(song)
+        mediaOnline.player!!.setOnCompletionListener(this)
     }
 
-    fun pause() {
+    fun setDataSourceOffline(song: ItemSong) {
+        mediaOffline.release()
+        currentSong = song
+        mediaOffline.setDataSource(song.linkSong)
+        currentSong = song
+        createNotification(song)
+        mediaOffline.player!!.setOnCompletionListener(this)
+    }
+
+    fun playOffline() {
+        mediaOffline.play()
+    }
+
+    fun pauseOffline() {
+        mediaOffline.pause()
+    }
+
+
+    fun getTotalTimeOffline(): Int {
+        return mediaOffline.getTotalTime()
+    }
+
+    fun getCurrentTimeOffline(): Int {
+        return mediaOffline.getCurrentTime()
+    }
+
+    fun releaseOffline() {
+        mediaOffline.release()
+    }
+
+    fun pauseOnline() {
         mediaOnline.pause()
     }
 
-    fun player(): MediaPlayer? {
+    fun playerOnline(): MediaPlayer? {
         return mediaOnline.player
     }
 
-    fun play() {
+    fun playerOffLine(): MediaPlayer? {
+        return mediaOffline.player
+    }
+
+    fun playOnline() {
         mediaOnline.play()
     }
 
-    fun isPrepare(): Boolean {
+    fun isPrepareOnline(): Boolean {
         return mediaOnline.isPrepare()
     }
 
-    fun getTotalTime(): Int {
+    fun getTotalTimeOnline(): Int {
         return mediaOnline.getTotalTime()
     }
 
-    fun getCurentTime(): Int? {
+    fun getCurrentTimeOnline(): Int? {
         return mediaOnline.getCurentTime()
     }
 
@@ -127,7 +187,11 @@ class SongService : Service(), MediaOnline.IMusicOnline {
         inter?.onPrepared()
     }
 
-    fun createNotification(song: ItemSong, isPlay: Boolean = true) {
+    override fun onCompletion() {
+
+    }
+
+    private fun createNotification(song: ItemSong, isPlay: Boolean = true) {
         val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val chanel = NotificationChannel(
@@ -176,17 +240,17 @@ class SongService : Service(), MediaOnline.IMusicOnline {
 
     private fun updatePendingIntent(remote: RemoteViews) {
         val intentPrevious = Intent()
-        intentPrevious.setAction("PREVIOUS")
+        intentPrevious.action = "PREVIOUS"
         intentPrevious.setClass(this, SongService::class.java)
         val pendingPrevious = PendingIntent.getService(this, 1, intentPrevious, 0)
 
         val intentPlay = Intent()
-        intentPlay.setAction("PLAY")
+        intentPlay.action = "PLAY"
         intentPlay.setClass(this, SongService::class.java)
         val pendingPlay = PendingIntent.getService(this, 1, intentPlay, 0)
 
         val intentNext = Intent()
-        intentNext.setAction("NEXT")
+        intentNext.action = "NEXT"
         intentNext.setClass(this, SongService::class.java)
         val pendingNext = PendingIntent.getService(this, 1, intentNext, 0)
 
@@ -194,6 +258,10 @@ class SongService : Service(), MediaOnline.IMusicOnline {
         remote.setOnClickPendingIntent(R.id.btn_play, pendingPlay)
         remote.setOnClickPendingIntent(R.id.btn_next, pendingNext)
 
+    }
+
+    override fun onCompletion(mp: MediaPlayer?) {
+        inter!!.onCompletion()
     }
 
 }

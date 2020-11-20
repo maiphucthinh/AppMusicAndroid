@@ -29,7 +29,6 @@ class OpenVideoOnlineFragment : Fragment(), View.OnClickListener, MediaPlayer.On
     private var async: MyAsyncTank? = null
     private var index = 0
     private var isCheckAuto = false
-    var isCheck: ICheckNextVideo? = null
     private var format: SimpleDateFormat? = null
 
     override fun onCreateView(
@@ -47,7 +46,6 @@ class OpenVideoOnlineFragment : Fragment(), View.OnClickListener, MediaPlayer.On
         )
         isCheckAuto = binding.auto.isChecked
         listVideo = ListVideoChildFragment()
-        isCheck = listVideo
         binding.control.visibility = View.GONE
         binding.playOrPause.setOnClickListener(this)
         binding.video.setOnClickListener(this)
@@ -161,7 +159,7 @@ class OpenVideoOnlineFragment : Fragment(), View.OnClickListener, MediaPlayer.On
 
             }
             R.id.zoom -> {
-                (activity as MainActivity).fullCreen(binding.video)
+                (activity as MainActivity).fullScreen(binding.video)
                 binding.video.layoutParams.height = 6000
                 binding.video.layoutParams.width = 4000
             }
@@ -224,11 +222,7 @@ class OpenVideoOnlineFragment : Fragment(), View.OnClickListener, MediaPlayer.On
             R.drawable.baseline_play_circle_outline_white_24dp
         )
         if (isCheckAuto) {
-            index += 1
-            val data = (activity as MainActivity).getModel().listVideo.value!![index]
-            (activity as MainActivity).getModel().getLinkVideo(
-                data.linkMusic
-            )
+            getListVideo().nextVideo()
             binding.playOrPause.setImageResource(
                 R.drawable.baseline_pause_circle_outline_white_24dp
             )
@@ -263,8 +257,7 @@ class OpenVideoOnlineFragment : Fragment(), View.OnClickListener, MediaPlayer.On
     override fun onStopTrackingTouch(seekBar: SeekBar?) {
         startAsyn()
     }
-
-    interface ICheckNextVideo {
-        fun isCheckNextVieo()
+    private fun getListVideo():ListVideoChildFragment{
+       return (binding.vpg.adapter as VideoAdapter).lisVideo
     }
 }

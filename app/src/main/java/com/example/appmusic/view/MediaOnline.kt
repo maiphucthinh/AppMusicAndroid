@@ -6,12 +6,12 @@ import android.net.Uri
 import android.util.Log
 
 class MediaOnline : MediaPlayer.OnErrorListener, MediaPlayer.OnPreparedListener {
-    var inter: IMusicOnline? = null
+    var inter: IMusicMedia? = null
     var player: MediaPlayer? = null
     private var isPrepare = false
 
 
-    fun setDataSoure(context: Context, link: String) {
+    fun setDataSource(context: Context, link: String) {
         player = MediaPlayer()
         player!!.setOnErrorListener(this)
         player!!.setDataSource(context, Uri.parse(link))
@@ -70,7 +70,8 @@ class MediaOnline : MediaPlayer.OnErrorListener, MediaPlayer.OnPreparedListener 
         player = null
     }
 
-    interface IMusicOnline {
+    interface IMusicMedia {
         fun onPrepared()
+        fun onCompletion()
     }
 }

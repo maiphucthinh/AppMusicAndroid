@@ -28,7 +28,6 @@ class ItemChildVideoAdapter : RecyclerView.Adapter<ItemChildVideoAdapter.VideoHo
         holder.binding.root.setOnClickListener {
             iVideo.setOnClickItemVideo(position)
         }
-        iVideo.setColor(position)?.let { holder.binding.bgr.setBackgroundColor(it) }
     }
 
     class VideoHolder(val binding: ItemChildVideoBinding) : RecyclerView.ViewHolder(binding.root)
@@ -36,6 +35,5 @@ class ItemChildVideoAdapter : RecyclerView.Adapter<ItemChildVideoAdapter.VideoHo
         fun getSizeVideo(): Int
         fun getListVideo(position: Int): ItemSearchOnline
         fun setOnClickItemVideo(position: Int)
-        fun setColor(position: Int): Int?
     }
 }

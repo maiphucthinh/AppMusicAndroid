@@ -9,10 +9,15 @@ import com.example.appmusic.view.fragment.ListVideoChildFragment
 class VideoAdapter(manager: FragmentManager):FragmentPagerAdapter(manager,
     BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
 ) {
+    var lisVideo:ListVideoChildFragment
+    init {
+        lisVideo = ListVideoChildFragment()
+    }
+
     override fun getItem(position: Int): Fragment {
-        when(position){
-            0-> return ListVideoChildFragment()
-            else-> return InfomationVideoFragment()
+        return when(position){
+            0-> lisVideo
+            else-> InfomationVideoFragment()
         }
     }
 

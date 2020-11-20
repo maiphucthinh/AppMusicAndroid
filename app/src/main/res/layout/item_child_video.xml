@@ -18,29 +18,30 @@
 
         <ImageView
             android:id="@+id/image_video"
-            android:layout_width="138dp"
-            android:layout_height="76dp"
+            android:layout_width="118dp"
+            android:layout_height="66dp"
             android:background="@drawable/custom_image_video"
             android:scaleType="centerCrop"
             android:src="@drawable/mylove1"
             app:setImage="@{data.linkImage}" />
 
-<!--        <RelativeLayout-->
-<!--            android:layout_width="32dp"-->
-<!--            android:layout_height="12dp"-->
-<!--            android:layout_marginLeft="96dp"-->
-<!--            android:layout_marginTop="58dp"-->
-<!--            android:background="@drawable/custom_text_time">-->
+        <RelativeLayout
+            android:layout_width="32dp"
+            android:layout_height="12dp"
+            android:layout_marginLeft="76dp"
+            android:layout_marginTop="48dp"
+            android:background="@drawable/custom_text_time">
 
-<!--            <TextView-->
-<!--                android:id="@+id/total_time"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_centerInParent="true"-->
-<!--                android:text="02:32"-->
-<!--                android:textColor="@color/colorWhite"-->
-<!--                android:textSize="8sp" />-->
-<!--        </RelativeLayout>-->
+            <TextView
+                android:id="@+id/total_time"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:text="02:32"
+                android:textColor="@color/colorWhite"
+                android:textSize="8sp"
+                app:setText="@{data.time}" />
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -57,7 +58,7 @@
                 android:layout_centerInParent="true"
                 android:text="Cảm nắng"
                 android:textColor="@color/colorBlack"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 app:setText="@{data.title}" />
 
             <TextView
@@ -67,7 +68,7 @@
                 android:layout_centerInParent="true"
                 android:layout_marginTop="4dp"
                 android:text="Suni Hạ Linh, RTee"
-                android:textSize="12sp"
+                android:textSize="10sp"
                 app:setText="@{data.artistName}" />
         </LinearLayout>
     </RelativeLayout>

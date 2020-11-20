@@ -11,11 +11,11 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    
+
     defaultConfig {
         applicationId "com.example.appmusic"
         minSdkVersion 19
-        targetSdkVersion 22
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
 
@@ -26,10 +26,31 @@ android {
         enabled = true
     }
 
+    signingConfigs {
+
+        release {
+            storeFile file("music_thinh.jks")
+            storePassword "music_thinh"
+            keyAlias "music_thinh"
+            keyPassword "music_thinh"
+
+            // Optional, specify signing versions used
+            v1SigningEnabled true
+            v2SigningEnabled true
+        }
+        lintOptions {
+            checkReleaseBuilds false
+            abortOnError false
+        }
+
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            signingConfig signingConfigs.release
         }
     }
 }
@@ -70,4 +91,6 @@ dependencies {
     implementation 'com.sothree.slidinguppanel:library:3.4.0'
     implementation 'jp.wasabeef:blurry:2.1.1'
     implementation 'com.github.navasmdc:MaterialDesign:+'
+
+
 }

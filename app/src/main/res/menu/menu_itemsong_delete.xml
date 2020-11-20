@@ -3,13 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         app:showAsAction="withText"
-        android:id="@+id/down_load"
-        android:icon="@drawable/baseline_arrow_downward_black_24dp"
-        android:title="Tải xuống"></item>
-    <item
-        app:showAsAction="withText"
         android:id="@+id/delete"
         android:icon="@drawable/baseline_arrow_downward_black_24dp"
-        android:title="Xoá"></item>
-
+        android:title="Xoa"></item>
 </menu>

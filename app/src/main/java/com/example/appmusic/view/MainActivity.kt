@@ -1,29 +1,27 @@
 package com.example.appmusic.view
 
+import android.Manifest
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
-import android.media.MediaPlayer
+import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.*
 import android.provider.MediaStore
 import android.util.DisplayMetrics
 import android.view.View
-import android.widget.ImageView
-import android.widget.RadioGroup
-import android.widget.SeekBar
-import android.widget.VideoView
+import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
+import com.example.appmusic.MyApp
 import com.example.appmusic.R
 import com.example.appmusic.databinding.ActivityMainBinding
 import com.example.appmusic.model.ItemSong
-import com.example.appmusic.view.adapter.ChildDiscoverChartAdapter
 import com.example.appmusic.view.fragment.*
 import com.example.appmusic.view.viewpager.MainFragment
 import com.example.appmusic.view.viewpager.ParentPageArtist
@@ -34,18 +32,21 @@ import java.text.SimpleDateFormat
 import java.util.concurrent.Executors
 import kotlin.random.Random
 
-class MainActivity : AppCompatActivity(), View.OnClickListener, MediaOnline.IMusicOnline,
-    SeekBar.OnSeekBarChangeListener, ChildDiscoverChartAdapter.IChart,
-    MediaPlayer.OnCompletionListener, RadioGroup.OnCheckedChangeListener {
+//gradlew assemblerelease
+class MainActivity : AppCompatActivity(), View.OnClickListener, MediaOnline.IMusicMedia,
+    SeekBar.OnSeekBarChangeListener,
+    RadioGroup.OnCheckedChangeListener {
     private var listSongs: MutableList<ItemSong>? = null
     private lateinit var binding: ActivityMainBinding
     private lateinit var model: SongViewModel
     private var isCheck = true
     private var isBegin = true
+    private var isDestroyView = false
+    private var isCheckMediaType = false
     private var isRandomSong = false
-    private var asyPlay: MyAsyn? = null
+    private var asyPlay: MyAsync? = null
     private var myTimer: MyTimer? = null
-    private var index = 0
+    private var currentPosition = 0
     private var number = 0
     private lateinit var format: SimpleDateFormat
     private var songService: SongService? = null
@@ -53,6 +54,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, MediaOnline.IMus
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        isDestroyView = false
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         model = SongViewModel()
         format = SimpleDateFormat("mm:ss")
@@ -78,12 +80,17 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, MediaOnline.IMus
         binding.childRemote.setOnClickListener(this)
         binding.showArtistDialig.setOnClickListener(this)
         binding.slidingTimer.setDragView(binding.closeTimer)
+        binding.downloadSongDialig.setOnClickListener(this)
         createConnectionToService()
-        songService?.player()?.isLooping = false
-        async()
+        model.loadAllMusicOffline(this)
+        songService?.playerOnline()?.isLooping = false
         register()
+        if (!isCheckInternet()) {
+            Toast.makeText(this, "kiểm tra kết nối internet!!", Toast.LENGTH_LONG).show()
+        } else {
+            Toast.makeText(this, "Trực tuyến!!", Toast.LENGTH_LONG).show()
+        }
     }
-
 
     fun addContentChild() {
         val transaction = supportFragmentManager.beginTransaction()
@@ -114,57 +121,61 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, MediaOnline.IMus
     }
 
     private fun register() {
+        if (Utils.showPermission(
+                this, 10,
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+        ) {
+
+        }
+
         model.linkSong.observe(this, Observer {
-            index = songService!!.currentPossition
-            setSoure(it.link)
+            currentPosition = songService!!.currentPosition
+            listSongs!![currentPosition].linkSong = it.link
+            setSourceOnline(listSongs!![currentPosition])
             model.getAllArtistSong(it.linkArtist)
             setValues()
         })
-        model.chart.observe(this, Observer {
-            listSongs = model.chart.value!![1].values
+        model.lisSongOffline.observe(this, Observer {
             if (songService != null) {
-                songService!!.itemSong = model.chart.value!![1].values
+                songService!!.itemSong = model.lisSongOffline.value!!
             }
-            setValues()
+            listSongs = model.lisSongOffline.value
+            if (listSongs?.size != 0 && listSongs != null) {
+                setValues()
+            }
+        })
+
+        MyApp.getAppModel().actionMedia.observe(this, Observer {
+            if (it == "PLAY") {
+                setImageButtonPause()
+            } else
+                setImageButtonPlay()
         })
     }
 
 
-    fun setSoure(linkSong: String) {
-        val img = listSongs!!.get(index).linkImage
-        val songName = listSongs!!.get(index).songName
-        val artistName = listSongs!!.get(index).artistName
-        val song = ItemSong(img, songName, artistName, linkSong)
+    private fun setSourceOnline(listSong: ItemSong) {
+        isCheckMediaType = true
+        isBegin = false
         asyPlay?.cancel(true)
         asyPlay = null
-        songService?.release()
-        songService?.setDataSoure(song)
+        songService?.releaseOnline()
+        songService?.setDataSourceOnline(listSong)
     }
 
-    private fun async() {
-        val asyn = object : AsyncTask<Void, Void, String>() {
-            override fun doInBackground(vararg params: Void?): String {
-                dfasfasf()
-                return ""
-            }
-
-        }
-        asyn.execute()
+    private fun setSourceOffline(itemSong: ItemSong) {
+        isBegin = false
+        asyPlay?.cancel(true)
+        asyPlay = null
+        currentPosition = songService!!.currentPosition
+        getImageLyricFragment()!!.getImagePlayer().setImage()
+        isCheckMediaType = false
+        songService!!.setDataSourceOffline(itemSong)
     }
 
-    private fun dfasfasf() {
-//        val c =
-//            Jsoup.connect("https://chiasenhac.vn/ca-si/blackpink-zsswzc7vq91vt2.html?tab=album")
-//                .get()
-//        val els = c.select("section.album")
-//        val linkArtist = els[0].select("a").attr("href")
-//        val artistName = els[0].select("a").text()
-//        val authorName = els[1].select("a").text()
-//        val linkAuthor = els[1].select("a").attr("href")
-//        val lyrics = c.select("div.tab-content.tab-lyric").text()
-    }
-
-    fun addMain() {
+    private fun addMain() {
         val manager = supportFragmentManager
         val tran = manager.beginTransaction()
         tran.add(R.id.frame, MainFragment(), MainFragment::class.java.name)
@@ -176,6 +187,16 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, MediaOnline.IMus
         return model
     }
 
+    fun openListSongOffLine() {
+        val tran = supportFragmentManager.beginTransaction()
+        val current = findCurrentFragment()
+        if (current != null) {
+            tran.hide(current)
+        }
+        tran.add(R.id.frame, ListSongOffline(), ListSongOffline::class.java.name)
+        tran.addToBackStack(null)
+        tran.commit()
+    }
 
     override fun onBackPressed() {
         val tran = supportFragmentManager.beginTransaction()
@@ -190,7 +211,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, MediaOnline.IMus
         super.onBackPressed()
     }
 
-    private fun openLogin() {
+    fun openLogin() {
         val manager = supportFragmentManager
         val tran = manager.beginTransaction()
         val fr = findCurrentFragment()
@@ -202,7 +223,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, MediaOnline.IMus
         tran.commit()
     }
 
-    fun openRegester() {
+    fun openRegister() {
         val manager = supportFragmentManager
         val tran = manager.beginTransaction()
         val fr = findCurrentFragment()
@@ -227,9 +248,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, MediaOnline.IMus
     }
 
     fun openVideo(position: Int) {
-        songService?.pause()
-        binding.play.setImageResource(R.drawable.baseline_play_circle_outline_white_24dp)
-        binding.childPlayAndPause.setImageResource(R.drawable.baseline_play_circle_outline_white_24dp)
+        songService?.pauseOnline()
+        setImageButtonPlay()
         binding.slidingPlaylist.visibility = View.GONE
         binding.playList.visibility = View.GONE
         val manager = supportFragmentManager
@@ -292,12 +312,29 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, MediaOnline.IMus
 
     private fun findCurrentFragment(): Fragment? {
         val frs = supportFragmentManager.fragments
-        if (frs == null) {
-            return null
-        }
         for (fr in frs) {
             if (fr != null && fr.isVisible || fr == OpenVideoOnlineFragment()) {
                 return fr
+            }
+        }
+        return null
+    }
+
+    private fun getImageLyricFragment(): ImageLyricFragment? {
+        val fg = supportFragmentManager.fragments
+        for (i in fg) {
+            if (i is ImageLyricFragment) {
+                return i
+            }
+        }
+        return null
+    }
+
+    private fun getHomeFragment(): HomeFragment? {
+        val fg = supportFragmentManager.fragments
+        for (i in fg) {
+            if (i is HomeFragment) {
+                return i
             }
         }
         return null
@@ -315,12 +352,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, MediaOnline.IMus
                 binding.sliding.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
             }
             R.id.list_song -> {
-                val fg = supportFragmentManager.fragments
-                for (i in fg) {
-                    if (i is ImageLyricFragment) {
-                        i.setCurrentIndex(0)
-                    }
-                }
+                getImageLyricFragment()!!.setCurrentIndex(0)
             }
             R.id.child_previous -> {
                 previousSong()
@@ -363,12 +395,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, MediaOnline.IMus
                 }
             }
             R.id.random -> {
-                if (!isRandomSong) {
+                isRandomSong = if (!isRandomSong) {
                     binding.random.setImageResource(R.drawable.baseline_swap_calls_red_500_24dp)
-                    isRandomSong = true
+                    true
                 } else {
                     binding.random.setImageResource(R.drawable.baseline_swap_calls_white_24dp)
-                    isRandomSong = false
+                    false
                 }
             }
             R.id.child_remote -> {
@@ -380,45 +412,79 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, MediaOnline.IMus
                 binding.slidingPlaylist.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
                 openParentPageArtist()
             }
+            R.id.download_song_dialig -> {
+                val linkSong = listSongs?.get(currentPosition)!!.linkSong
+                if (linkSong == null) {
+                    Toast.makeText(this, "Không thể tải bài hát!!!", Toast.LENGTH_SHORT).show()
+                } else
+                    downLoadSong(linkSong)
+            }
         }
     }
 
-
     fun initMedia(
-        position: Int,
-        listSong: MutableList<ItemSong>
+        position: Int?,
+        listSong: MutableList<ItemSong>?,
+        isCheck: Boolean = true
     ) {
-        if (songService != null) {
+        val imageLyricFragment = getImageLyricFragment()!!
+        imageLyricFragment.setCurrentIndex(1)
+        if (listSong != null) {
+            imageLyricFragment.getplayList().resetPlaylist()
             songService!!.itemSong = listSong
+            listSongs = listSong
+            binding.sliding.panelState = SlidingUpPanelLayout.PanelState.EXPANDED
+            binding.slidingPlaylist.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
         }
-        listSongs = listSong
-        index = position
-        songService!!.currentPossition =index
-
-        binding.sliding.panelState = SlidingUpPanelLayout.PanelState.EXPANDED
-        binding.slidingPlaylist.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
-
-        binding.play.setImageResource(
-            R.drawable.baseline_pause_circle_outline_white_24dp
-        )
-        binding.childPlayAndPause.setImageResource(
-            R.drawable.baseline_pause_circle_outline_white_24dp
-        )
+        if (position == null) {
+            clickButtonRandomSong()
+        } else {
+            currentPosition = position
+            songService!!.currentPosition = currentPosition
+        }
+        asyPlay?.cancel(true)
+        asyPlay = null
+        isCheckMediaType = isCheck
+        songService?.isCheckCurrentType = isCheck
+        isCheckSetSource()
+        setImageButtonPause()
         setValues()
+    }
 
+    private fun isCheckSetSource() {
+        val imageLyricFragment = getImageLyricFragment()!!
+        if (isCheckMediaType) {
+            songService!!.releaseOffline()
+            model.linkSong(
+                listSongs!![currentPosition].linkSong
+            )
+        } else {
+            songService!!.releaseOnline()
+            setSourceOffline(listSongs!![currentPosition])
+            imageLyricFragment.getTabLyric().resetLyric()
+        }
+    }
+
+    private fun clickButtonRandomSong() {
+        currentPosition = Random.nextInt(
+            listSongs!!.size
+        )
+        songService!!.currentPosition = currentPosition
+        isRandomSong = true
+        binding.random.setImageResource(R.drawable.baseline_swap_calls_red_500_24dp)
     }
 
     private fun previousSong() {
         if (listSongs == null) {
             return
         }
-        if (index == 0) {
-            index = listSongs?.size!! - 1
-            songService!!.currentPossition =index
+        if (currentPosition == 0) {
+            currentPosition = listSongs?.size!! - 1
+            songService!!.currentPosition = currentPosition
         }
-        index = index - 1
-        songService!!.currentPossition = index
-        model.linkSong(listSongs?.get(index)!!.linkSong)
+        currentPosition -= 1
+        songService!!.currentPosition = currentPosition
+        isCheckSetSource()
         setValues()
     }
 
@@ -427,39 +493,51 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, MediaOnline.IMus
         if (listSongs == null) {
             return
         }
+        if (isRandomSong) {
+            randomSong()
+            setImageButtonPause()
+            return
+        }
         if (number == 1) {
-            if (index == listSongs?.size!! - 1) {
-                index = 0
-                songService!!.currentPossition =index
+            if (currentPosition == listSongs?.size!! - 1) {
+                currentPosition = 0
+                songService!!.currentPosition = currentPosition
             }
-            index += 1
-            songService!!.currentPossition =index
-            model.linkSong(listSongs?.get(index)!!.linkSong)
-            binding.play.setImageResource(
-                R.drawable.baseline_pause_circle_outline_white_24dp
-            )
-            binding.childPlayAndPause.setImageResource(
-                R.drawable.baseline_pause_circle_outline_white_24dp
-            )
+            currentPosition += 1
+            songService!!.currentPosition = currentPosition
+            isCheckSetSource()
+            setImageButtonPause()
             setValues()
         } else {
-            if (index != listSongs?.size!! - 1) {
-                index += 1
-                songService!!.currentPossition =index
-                model.linkSong(listSongs?.get(index)!!.linkSong)
-                binding.play.setImageResource(
-                    R.drawable.baseline_pause_circle_outline_white_24dp
-                )
-                binding.childPlayAndPause.setImageResource(
-                    R.drawable.baseline_pause_circle_outline_white_24dp
-                )
+            if (currentPosition != listSongs?.size!! - 1) {
+                currentPosition += 1
+                songService!!.currentPosition = currentPosition
+                isCheckSetSource()
+                setImageButtonPause()
                 setValues()
             } else {
-                binding.play.setImageResource(R.drawable.baseline_play_circle_outline_white_24dp)
-                binding.childPlayAndPause.setImageResource(R.drawable.baseline_play_circle_outline_white_24dp)
+                setImageButtonPlay()
             }
         }
 
+    }
+
+    private fun setImageButtonPause() {
+        binding.play.setImageResource(
+            R.drawable.baseline_pause_circle_outline_white_24dp
+        )
+        binding.childPlayAndPause.setImageResource(
+            R.drawable.baseline_pause_circle_outline_white_24dp
+        )
+    }
+
+    private fun setImageButtonPlay() {
+        binding.play.setImageResource(
+            R.drawable.baseline_play_circle_outline_white_24dp
+        )
+        binding.childPlayAndPause.setImageResource(
+            R.drawable.baseline_play_circle_outline_white_24dp
+        )
     }
 
     private fun setClickButtonPlay() {
@@ -467,40 +545,35 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, MediaOnline.IMus
             return
         }
         if (isBegin) {
-            model.linkSong(listSongs?.get(index)!!.linkSong)
-            isBegin = false
-            binding.play.setImageResource(
-                R.drawable.baseline_pause_circle_outline_white_24dp
-            )
-            binding.childPlayAndPause.setImageResource(
-                R.drawable.baseline_pause_circle_outline_white_24dp
-            )
+            isCheckSetSource()
+            setImageButtonPause()
+            return
         }
-        if (songService?.player() != null) {
-            if (songService?.player()!!.isPlaying) {
-                binding.childPlayAndPause.setImageResource(
-                    R.drawable.baseline_play_circle_outline_white_24dp
-                )
-                binding.play.setImageResource(
-                    R.drawable.baseline_play_circle_outline_white_24dp
-                )
-                songService?.pause()
+
+        if (isCheckMediaType) {
+            if (songService?.playerOnline()!!.isPlaying) {
+                setImageButtonPlay()
+                songService?.pauseOnline()
             } else {
-                binding.play.setImageResource(
-                    R.drawable.baseline_pause_circle_outline_white_24dp
-                )
-                binding.childPlayAndPause.setImageResource(
-                    R.drawable.baseline_pause_circle_outline_white_24dp
-                )
-                songService?.play()
+                setImageButtonPause()
+                songService?.playOnline()
+            }
+
+        } else {
+            if (songService?.playerOffLine()!!.isPlaying) {
+                setImageButtonPlay()
+                songService?.pauseOffline()
+            } else {
+                setImageButtonPause()
+                songService?.playOffline()
             }
         }
     }
 
     private fun setValues() {
-        val songName = listSongs?.get(index)!!.songName
-        val artistName = listSongs?.get(index)!!.artistName
-        val linkImage = listSongs?.get(index)!!.linkImage
+        val songName = listSongs?.get(currentPosition)!!.songName
+        val artistName = listSongs?.get(currentPosition)!!.artistName
+        val linkImage = listSongs?.get(currentPosition)!!.linkImage
         binding.songName.text = songName
         binding.singerName.text = artistName
         binding.childSongName.text = songName
@@ -527,51 +600,17 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, MediaOnline.IMus
     }
 
     fun setImageForTabImageSong(img: ImageView) {
-        val linkImage = listSongs?.get(index)!!.linkImage
+        val linkImage = listSongs?.get(currentPosition)!!.linkImage
         setImageSong(img, linkImage)
     }
 
     override fun onPrepared() {
-        songService?.player()?.setOnCompletionListener(this)
-        startAsyn()
+        startAsync()
     }
 
-    private fun startAsyn() {
-        if (!songService!!.isPrepare()) {
-            return
-        }
-        if (asyPlay != null) {
-            asyPlay!!.isRunning = false
-        }
-        val total = songService?.getTotalTime()
-        binding.sumTime.text = format.format(total)
-        asyPlay = MyAsyn()
-        asyPlay!!.executeOnExecutor(Executors.newFixedThreadPool(1))
-    }
-
-    override fun getSizeChart(): Int {
-        if (listSongs == null) {
-            return 0
-        }
-        return listSongs!!.size
-    }
-
-    override fun getListChart(position: Int): ItemSong {
-        return listSongs!![position]
-    }
-
-    override fun setOnclickItemChart(position: Int) {
-        index = position
-        model.linkSong(
-            listSongs!![position].linkSong
-        )
-        binding.slidingPlaylist.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
-        setValues()
-    }
-
-    override fun onCompletion(mp: MediaPlayer?) {
+    override fun onCompletion() {
         if (number == 2) {
-            songService?.play()
+            songService?.playOnline()
         } else {
             if (isRandomSong) {
                 randomSong()
@@ -583,20 +622,41 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, MediaOnline.IMus
         }
     }
 
+    private fun startAsync() {
+        if (asyPlay != null) {
+            asyPlay!!.isRunning = false
+        }
+        if (isCheckMediaType) {
+            if (!songService!!.isPrepareOnline()) {
+                return
+            }
+            val total = songService?.getTotalTimeOnline()
+            binding.sumTime.text = format.format(total)
+            asyPlay = MyAsync()
+            asyPlay!!.executeOnExecutor(Executors.newFixedThreadPool(1))
+        } else {
+            val total = songService?.getTotalTimeOffline()
+            binding.sumTime.text = format.format(total)
+            asyPlay = MyAsync()
+            asyPlay!!.executeOnExecutor(Executors.newFixedThreadPool(1))
+        }
+    }
+
     private fun randomSong() {
         if (listSongs != null) {
             val size = listSongs!!.size
-            val indexChild = Random.nextInt(size)
-            index = indexChild
-            model.linkSong(
-                listSongs!![indexChild].linkSong
-            )
+            currentPosition = Random.nextInt(size)
             setValues()
+            isCheckSetSource()
         }
     }
 
     fun getListSong(): MutableList<ItemSong>? {
         return listSongs
+    }
+
+    fun getCheckCurrentMedia(): Boolean {
+        return isCheckMediaType
     }
 
     override fun onCheckedChanged(group: RadioGroup?, checkedId: Int) {
@@ -624,29 +684,42 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, MediaOnline.IMus
         }
     }
 
-    inner class MyAsyn : AsyncTask<Void, Int?, Void?>() {
+    inner class MyAsync : AsyncTask<Void, Int?, Void?>() {
         var isRunning = true
         override fun doInBackground(vararg params: Void?): Void? {
             while (isRunning) {
-                publishProgress(songService!!.getCurentTime())
+                if (isCheckMediaType) {
+                    publishProgress(songService!!.getCurrentTimeOnline())
+                } else {
+                    publishProgress(songService!!.getCurrentTimeOffline())
+                }
                 SystemClock.sleep(500)
             }
             return null
         }
 
         override fun onProgressUpdate(vararg values: Int?) {
-            binding.currenTime.text = (format.format(values[0]))
-            binding.sb.progress = values[0]!! * 100 / songService!!.getTotalTime()
+            if (isCheckMediaType) {
+                binding.currenTime.text = (format.format(values[0]))
+                binding.sb.progress = values[0]!! * 100 / songService!!.getTotalTimeOnline()
+            } else {
+                binding.currenTime.text = (format.format(values[0]))
+                binding.sb.progress = values[0]!! * 100 / songService!!.getTotalTimeOffline()
+            }
         }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
         if (fromUser) {
-            songService?.player()!!.seekTo(
-                progress.toLong() * songService!!.getTotalTime() / 100,
-                MediaPlayer.SEEK_NEXT_SYNC
-            )
+            if (isCheckMediaType) {
+                songService?.playerOnline()!!.seekTo(
+                    progress * songService!!.getTotalTimeOnline() / 100
+                )
+            } else {
+                songService?.playerOffLine()!!
+                    .seekTo(progress * songService!!.getTotalTimeOffline() / 100)
+            }
         }
     }
 
@@ -655,7 +728,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, MediaOnline.IMus
     }
 
     override fun onStopTrackingTouch(seekBar: SeekBar?) {
-        startAsyn()
+        startAsync()
     }
 
     inner class MyTimer : AsyncTask<Int, Void, Boolean> {
@@ -677,17 +750,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, MediaOnline.IMus
 
         override fun onPostExecute(result: Boolean?) {
             if (result == true) {
-                songService?.pause()
+                songService?.pauseOnline()
                 binding.rg1.isChecked = false
                 binding.rg2.isChecked = false
                 binding.rg3.isChecked = false
                 binding.rg4.isChecked = false
-                binding.childPlayAndPause.setImageResource(
-                    R.drawable.baseline_play_circle_outline_white_24dp
-                )
-                binding.play.setImageResource(
-                    R.drawable.baseline_play_circle_outline_white_24dp
-                )
+                setImageButtonPlay()
                 myTimer = null
             }
         }
@@ -695,7 +763,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, MediaOnline.IMus
 
     }
 
-    fun fullCreen(view: VideoView) {
+    fun fullScreen(view: VideoView) {
         val metrics = DisplayMetrics()
         windowManager.defaultDisplay.getMetrics(metrics)
         val parent = view.parent as View
@@ -748,5 +816,48 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, MediaOnline.IMus
             }
         }
         return null
+    }
+
+    fun downLoadSong(linkSong: String) {
+
+        model.linkSong(linkSong,
+            {
+                Utils.downloadFileFromInternet(
+                    it.link, context = this
+                ) { link, path, name ->
+                    run {
+                        if (isDestroyView) {
+                            return@run
+                        }
+                        Toast.makeText(this, "Finish download: $name", Toast.LENGTH_SHORT)
+                            .show()
+                        model.loadAllMusicOffline(this)
+                        getHomeFragment()?.resetTotalNumberSong()
+                        getCountMusic()
+                    }
+                }
+                if (it.link != null) {
+                    return@linkSong it.link
+                } else {
+                    "Error"
+                }
+
+            },
+            {
+
+            }
+        )
+    }
+
+    override fun onDestroy() {
+        isDestroyView = true
+        super.onDestroy()
+    }
+
+    private fun isCheckInternet(): Boolean {
+        val connectivityManager =
+            getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetworkInfo = connectivityManager.activeNetworkInfo
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected
     }
 }

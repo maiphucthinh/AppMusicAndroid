@@ -1,6 +1,7 @@
 package com.example.appmusic.view.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.recyclerview.widget.RecyclerView
@@ -30,13 +31,14 @@ class ItemSongSearchAdapter : RecyclerView.Adapter<ItemSongSearchAdapter.SongOnl
         if (iSong.getSongOnline(position) == null) {
             return
         }
-            holder.binding.data = iSong.getSongOnline(position)
-            holder.binding.root.setOnClickListener {
-                iSong.setOnClickItem(position)
-            }
-            holder.binding.btnMenu.setOnClickListener {
-                iSong.setOnClickMenu(position, holder.binding.btnMenu)
-            }
+        holder.binding.data = iSong.getSongOnline(position)
+        holder.binding.root.setOnClickListener {
+            iSong.setOnClickItem(position)
+        }
+
+        holder.binding.btnMenu.setOnClickListener {
+            iSong.setOnClickMenu(position, holder.binding.btnMenu)
+        }
     }
 
     class SongOnlineHolder(val binding: ItemSongSearchBinding) :

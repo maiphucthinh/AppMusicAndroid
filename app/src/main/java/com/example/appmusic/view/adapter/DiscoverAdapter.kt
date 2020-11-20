@@ -2,6 +2,7 @@ package com.example.appmusic.view.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.appmusic.databinding.ItemDiscoverTypeTwoBinding
@@ -54,13 +55,16 @@ class DiscoverAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                 override fun getData(childPosition: Int) = data.values[childPosition]
 
-                override fun setOnClicItem(childPosition: Int) {
+                override fun setOnClickItem(childPosition: Int) {
                     val linkTheme = data.values[childPosition].linkSong
                     iDiscover.setOnClickItem(parentPosition, childPosition, linkTheme)
                 }
             }
             val itheme = object : ItemThemeAdapter.ITheme {
                 override fun getSize(): Int {
+                    if (data.values == null){
+                        return 0
+                    }
                     if (parentPosition == 3) {
                         return 8
                     }
@@ -75,9 +79,9 @@ class DiscoverAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
 
             }
-            holder.binding.topic.setText(data.name)
-            if (parentPosition == 2) {
+            holder.binding.topic.text = data.name
 
+            if (parentPosition == 2  ) {
                 if (holder.binding.rcChart.adapter == null) {
                     holder.binding.rcChart.adapter = ChildDiscoverAdapter(iTopic)
                 } else {
@@ -101,25 +105,25 @@ class DiscoverAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 override fun getListChart(position: Int) = data.values[position]
 
                 override fun setOnclickItemChart(position: Int) {
-                    val linkTheme = data.values[position].linkSong
-                    val songName = data.values[position].songName
-                    val artistName = data.values[position].artistName
-                    val linkImage = data.values[position].linkImage
+                    val linkSong = data.values[position].linkSong
                     iDiscover.setItemSongTypeTwo(
                         position,
-                        songName,
-                        artistName,
-                        linkTheme,
-                        linkImage,
                         data.values
                     )
-                    iDiscover.setOnClickItem(parentPosition, position, linkTheme)
+                    iDiscover.setOnClickItem(parentPosition, position, linkSong)
+                }
+
+                override fun setOnClickPopupMenu(position: Int, btn: Button) {
+                    val linkSong = data.values[position].linkSong
+                    iDiscover.setOnClickPopupMenu(
+                        parentPosition, position, holder.binding.rc, btn, linkSong
+                    )
                 }
             }
             holder.binding.more.setOnClickListener {
                 iDiscover.setOnClickMore(parentPosition)
             }
-            holder.binding.topic.setText(data.name)
+            holder.binding.topic.text = data.name
 
             if (holder.binding.rc.adapter == null) {
                 holder.binding.rc.adapter = ChildDiscoverChartAdapter(iChart)
@@ -136,6 +140,7 @@ class DiscoverAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder> {
         when (position) {
             1 -> return 1
             4 -> return 1
+            8 -> return 1
         }
         return 0
     }
@@ -150,15 +155,19 @@ class DiscoverAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder> {
     interface IDiscover {
         fun getSizeChart(): Int
         fun getItemChart(position: Int): ItemMusicList<ItemSong>
-        fun setOnClickItem(parentPosition: Int, position: Int, linkTheme: String?)
+        fun setOnClickItem(parentPosition: Int, position: Int, linkSong: String?)
         fun setOnClickMore(parentPosition: Int)
         fun setItemSongTypeTwo(
             position: Int,
-            songName: String?,
-            artistName: String?,
-            linkSong: String?,
-            linkImage: String?,
             listSong: MutableList<ItemSong>?
+        )
+
+        fun setOnClickPopupMenu(
+            parentPosition: Int,
+            position: Int,
+            rc: RecyclerView,
+            btn: Button,
+            linkSong: String
         )
     }
 }

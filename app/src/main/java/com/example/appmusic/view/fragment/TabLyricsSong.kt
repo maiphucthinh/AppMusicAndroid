@@ -16,7 +16,7 @@ import com.thin.music.model.GetLinkMusic
 
 class TabLyricsSong : Fragment(), TabLyricSongAdapter.ILyric {
     private lateinit var binding: ShowLyricsBinding
-    private lateinit var data:GetLinkMusic
+    private var data: GetLinkMusic? = null
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -32,19 +32,30 @@ class TabLyricsSong : Fragment(), TabLyricSongAdapter.ILyric {
 
     private fun register() {
         (activity as MainActivity).getModel().linkSong.observe(this, Observer {
-            val songName = "Bài hát: "+ it.songName
-            val artistName = "Ca sĩ: "+it.artistName
+            val songName = "Bài hát: " + it.songName
+            val artistName = "Ca sĩ: " + it.artistName
             val lyricsSong = it.lyric
             val author = it.authorName
-             data = GetLinkMusic(lyricsSong, artistName, author, songName)
+            data = GetLinkMusic(lyricsSong, artistName, author, songName)
             binding.rc.layoutManager = LinearLayoutManager(context)
             binding.rc.adapter = TabLyricSongAdapter(this)
         })
     }
 
-    override fun getSizeLyric() = 1
+
+    override fun getSizeLyric(): Int {
+        if (data == null) {
+            return 0
+        }
+        return 1
+    }
 
     override fun getDataLyric(): GetLinkMusic {
-        return data
+        return data!!
+    }
+
+    fun resetLyric() {
+        data = null
+        binding.rc.adapter?.notifyDataSetChanged()
     }
 }

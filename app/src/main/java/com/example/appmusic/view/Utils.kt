@@ -3,6 +3,7 @@ package com.example.appmusic.view
 import android.app.Activity
 import android.content.ContentValues
 import android.content.Context
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.media.MediaPlayer
 import android.os.Environment
@@ -12,6 +13,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.app.ActivityCompat
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.example.appmusic.R
@@ -67,17 +69,17 @@ object Utils {
         }
     }
 
-    private fun saveIntoDatabase(context:Context?, title:String, path:String){
-        if (context == null){
+    private fun saveIntoDatabase(context: Context?, title: String, path: String) {
+        if (context == null) {
             return
         }
         var name = title
         val values = ContentValues()
-        if ( name.endsWith(".mp3")){
-            name = name.substring(0, name.length-4)
+        if (name.endsWith(".mp3")) {
+            name = name.substring(0, name.length - 4)
         }
         values.put(MediaStore.Audio.Media.IS_NOTIFICATION, true)
-        values.put(MediaStore.MediaColumns.DISPLAY_NAME, name   )
+        values.put(MediaStore.MediaColumns.DISPLAY_NAME, name)
         values.put(MediaStore.Audio.Media.TITLE, name)
         values.put(MediaStore.Audio.Media.MIME_TYPE, "audio/*")
         values.put(MediaStore.Audio.Media.DATA, File(path).absolutePath)
@@ -86,7 +88,7 @@ object Utils {
 
     fun downloadFileFromInternet(
         link: String,
-        context:Context? = null,
+        context: Context? = null,
         finishDownload: ((link: String, path: String, name: String) -> Unit)? = null
     ) {
         Observable.just(link)
@@ -147,4 +149,21 @@ object Utils {
         imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
+    fun checkPermission(context: Context, vararg permissions: String): Boolean {
+        for (permission in permissions) {
+            val check = ActivityCompat.checkSelfPermission(context, permission)
+            if (check != PackageManager.PERMISSION_GRANTED) {
+                return false
+            }
+        }
+        return true
+    }
+
+    fun showPermission(act: Activity, requestCode: Int, vararg permissions: String): Boolean {
+        if (checkPermission(act, *permissions)) {
+            return true
+        }
+        ActivityCompat.requestPermissions(act, permissions, requestCode)
+        return false
+    }
 }
